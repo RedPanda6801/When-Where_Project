@@ -5,15 +5,11 @@ spring:
     username: root
     password: root
 
-    jpa:
-      database-platform: org.hibernate.dialect.MariaDBDialect
-      hibernate:
-        ddl-auto: create-drop
-      properties:
-        hibernate:
-          format_sql: true
-          show_sql: true
-      defer-datasource-initialization: true
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
 
   logging:
     level:
