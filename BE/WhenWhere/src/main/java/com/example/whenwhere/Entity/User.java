@@ -1,5 +1,6 @@
 package com.example.whenwhere.Entity;
 
+import com.example.whenwhere.Dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -56,4 +57,13 @@ public class User {
     )
 
     private Set<Authority> authorities;
+
+    public static User toEntity(UserDto dto){
+        return User.builder()
+                .userId(dto.getUserId())
+                .nickname(dto.getNickname())
+                .location(dto.getLocation())
+                .password(dto.getPassword())
+                .build();
+    }
 }

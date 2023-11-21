@@ -60,7 +60,7 @@ public class SecurityConfig{
                                 //
                                 new AntPathRequestMatcher("/api/test"),
                                 new AntPathRequestMatcher("/api/authorization"),
-                                new AntPathRequestMatcher("/api/sign")
+                                new AntPathRequestMatcher("/api/user/join")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
