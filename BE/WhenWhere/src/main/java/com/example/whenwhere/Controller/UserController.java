@@ -29,9 +29,9 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         // 존재하지 않으면 회원가입 서비스 호출
-        boolean joinResult = userService.join(userDto);
+        boolean result = userService.join(userDto);
         // 성공 실패 시 Error 응답
-        if(!joinResult){
+        if(!result){
             response.setResponse("Failed to Create User", HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }

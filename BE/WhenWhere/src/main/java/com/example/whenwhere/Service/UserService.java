@@ -14,6 +14,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // 예외처리 중복을 방지하기 위해 Optional 값만 사용
+    // 외부(Controller)에서 사용하지 않고 내부에서 별도로 사용하는 Service
+    public Optional<User> getUserById(Integer id){
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional;
+    }
+
     public boolean existedUser(String userId){
         try{
             Optional<User> userOptional = userRepository.findByUserId(userId);
@@ -40,10 +47,7 @@ public class UserService {
         }
         // 저장할 객체 세팅
         User userObj = new User();
-        userObj.setUserId(userDto.getUserId());
-        userObj.setNickname(userDto.getNickname());
-        userObj.setPassword(userDto.getPassword());
-        userObj.setLocation(userDto.getLocation());
+        userObj = userObj.toEntity(userDto);
 
         try{
             userRepository.save(userObj);
