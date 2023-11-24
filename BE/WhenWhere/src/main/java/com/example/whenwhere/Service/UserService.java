@@ -1,6 +1,5 @@
 package com.example.whenwhere.Service;
 
-import com.example.whenwhere.Dto.ResponseDto;
 import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.UserRepository;

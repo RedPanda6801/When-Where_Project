@@ -5,6 +5,10 @@ spring:
     username: root
     password: root
 
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true

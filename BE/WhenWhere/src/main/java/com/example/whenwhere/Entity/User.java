@@ -19,7 +19,7 @@ public class User {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name="user_id", length=20, unique = true)
     private String userId;
@@ -38,7 +38,8 @@ public class User {
     private boolean activated;
 
     // 한 그룹의 호스트에 대한 연관관계 설정
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @OneToMany(mappedBy = "host", cascade = CascadeType.REMOVE)
     Set<Group> groups;
 
     // 한 유저가 여러 개의 스케줄을 등록할 수 있도록 연관관계 설정
@@ -48,6 +49,11 @@ public class User {
     // 그룹과 유저 사이의 M:N 관계를 GroupMembers 엔터티로 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<GroupMembers> groupMembers;
+
+    // 그룹의 지원자에 대한 관계 설정
+    @JsonIgnore
+    @OneToMany(mappedBy = "applier", cascade = CascadeType.REMOVE)
+    List<Apply> applies;
 
     @ManyToMany
     @JoinTable(

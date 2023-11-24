@@ -7,12 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class GroupDto {
+public class ApplyDto {
 
-    private int id;
-
-    private String groupName;
-
-    private String attribute;
-
+    // group의 pk값
+    private Integer applyGroupId;
 }
