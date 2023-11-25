@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class UserDto {
 
-    private Long id;
+    private int id;
 
     private String userId;
 

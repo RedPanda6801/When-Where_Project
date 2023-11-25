@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class ScheduleDto {
-    private Long id;
+
+    private int id;
 
     private String title;
 

@@ -14,5 +14,5 @@ public class Authority {
 
     @Id
     @Column(name="authority_name")
-    private Long authorityName;
+    private Integer authorityName;
 }

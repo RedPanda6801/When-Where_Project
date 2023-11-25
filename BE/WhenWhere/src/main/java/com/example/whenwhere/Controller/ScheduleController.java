@@ -31,4 +31,20 @@ public class ScheduleController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // 빈 시간 계산 API
+    @PostMapping("/api/schedule/busytime-group")
+    @ResponseBody
+    public ResponseEntity<ResponseDto> busyTimeInGroupSchedule(/*List<User> members, List<Date> week*/){
+        ResponseDto response = new ResponseDto();
+
+        // members의 schedule을 날짜 별로 정렬하여 가져오는 service
+
+        // 해당 service에 대한 예외 처리
+
+        // schedule을 날짜 별로 합치는 service
+
+        // 해당 service에 대한 예외 처리
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

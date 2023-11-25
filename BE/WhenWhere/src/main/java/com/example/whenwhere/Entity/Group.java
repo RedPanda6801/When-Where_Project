@@ -1,5 +1,6 @@
 package com.example.whenwhere.Entity;
 
+import com.example.whenwhere.Dto.GroupDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,13 +15,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"user"})
+@ToString(exclude = {"host"})
 public class Group {
 
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name="group_name", length=15, nullable = false)
     private String groupName;
@@ -31,9 +32,20 @@ public class Group {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="host_id")
-    private User user;
+    private User host;
 
     // 그룹과 유저 사이의 M:N 관계를 GroupMembers 엔터티로 설정
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     List<GroupMembers> groupMembers;
+
+    // 그룹의 지원자에 대한 관계 설정
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+    List<Apply> applies;
+
+    public Group toEntity(GroupDto dto){
+        return Group.builder()
+                .groupName(dto.getGroupName())
+                .attribute(dto.getAttribute())
+                .build();
+    }
 }
