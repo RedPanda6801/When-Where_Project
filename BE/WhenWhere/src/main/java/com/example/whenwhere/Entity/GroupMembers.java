@@ -30,4 +30,12 @@ public class GroupMembers {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
     private Group group;
+
+    public GroupMembers toEntity(Apply apply){
+        return GroupMembers.builder()
+                .group(apply.getGroup())
+                .groupName(apply.getGroup().getGroupName())
+                .user(apply.getApplier())
+                .build();
+    }
 }

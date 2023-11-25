@@ -13,6 +13,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUserId(String userId);
 
-    @Query("SELECT u.id, u.userId, u.nickname FROM User u LEFT JOIN u.applies a WHERE a.group.id = :gid")
+    @Query("SELECT a.id, u.id, u.userId, u.nickname FROM User u LEFT JOIN u.applies a WHERE a.group.id = :gid AND a.state = false")
     List<Object> findAllUserByGroupId(@Param("gid") Integer gid);
+
+    @Query("SELECT u.id, u.userId, u.nickname FROM User u LEFT JOIN u.groupMembers g WHERE g.group.id = :groupId AND g.group.host.id = :hostId")
+    List<Object> findMembersByGroup(@Param("groupId")Integer groupId, @Param("hostId") Integer hostId);
 }

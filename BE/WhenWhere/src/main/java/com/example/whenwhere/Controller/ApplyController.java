@@ -50,4 +50,19 @@ public class ApplyController {
         // 성공하면 생성했다는 응답 전송
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping("/api/group/process-apply/{host_id}")
+    @ResponseBody
+    public ResponseEntity<ResponseDto> processApply(@PathVariable Integer host_id, @RequestBody ApplyDto applyDto){
+        ResponseDto response = new ResponseDto();
+        // 해당 apply에 대한 처리 서비스 호출
+        boolean result =  applyService.process(host_id, applyDto);
+        // 성공 실패 시 Error 응답
+        if(!result){
+            response.setResponse("Failed to Apply Group", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        // 성공하면 생성했다는 응답 전송
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
