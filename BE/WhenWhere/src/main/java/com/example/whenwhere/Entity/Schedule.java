@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Schedule {
+public class Schedule implements Cloneable{
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,5 +51,10 @@ public class Schedule {
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .build();
+    }
+
+    @Override
+    public Schedule clone() throws CloneNotSupportedException {
+        return (Schedule) super.clone();
     }
 }

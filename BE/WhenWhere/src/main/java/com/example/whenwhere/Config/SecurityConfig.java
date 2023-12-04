@@ -57,12 +57,7 @@ public class SecurityConfig{
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(
-                                //
-                                new AntPathRequestMatcher("/api/test"),
-                                new AntPathRequestMatcher("/api/authorization"),
-                                new AntPathRequestMatcher("/api/user/join"),
-                                new AntPathRequestMatcher("/api/schedule/**"),
-                                new AntPathRequestMatcher("/api/group/**")
+                                new AntPathRequestMatcher("/api/**")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

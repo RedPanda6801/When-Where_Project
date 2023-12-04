@@ -84,7 +84,7 @@ public class ApplyService {
         return true;
     }
 
-    public List<Object> getAllByGroup(Integer hostId, Integer groupId){
+    public List<Object> getAllApplyByGroup(Integer hostId, Integer groupId){
         // Validation
         if(hostId == null || groupId == null){
             // 예외처리 반드시 필요
