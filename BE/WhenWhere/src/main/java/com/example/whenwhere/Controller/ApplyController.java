@@ -39,7 +39,7 @@ public class ApplyController {
     public ResponseEntity<ResponseDto> getApplies(@PathVariable Integer host_id, @PathVariable Integer group_id){
         ResponseDto response = new ResponseDto();
         // 유저를 호스트로 하는 그룹 생성 서비스 호출
-        List<Object> applies = applyService.getAllByGroup(host_id, group_id);
+        List<Object> applies = applyService.getAllApplyByGroup(host_id, group_id);
         // 성공 실패 시 Error 응답
         if(applies == null){
             response.setResponse("Failed to Get Group Applies", HttpStatus.BAD_REQUEST);
