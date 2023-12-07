@@ -1,12 +1,9 @@
 package com.example.whenwhere.Service;
 
-import com.example.whenwhere.Dto.ApplyDto;
 import com.example.whenwhere.Dto.GroupDto;
-import com.example.whenwhere.Entity.Apply;
 import com.example.whenwhere.Entity.Group;
 import com.example.whenwhere.Entity.GroupMembers;
 import com.example.whenwhere.Entity.User;
-import com.example.whenwhere.Repository.ApplyRepository;
 import com.example.whenwhere.Repository.GroupMembersRepository;
 import com.example.whenwhere.Repository.GroupRepository;
 import com.example.whenwhere.Repository.UserRepository;
