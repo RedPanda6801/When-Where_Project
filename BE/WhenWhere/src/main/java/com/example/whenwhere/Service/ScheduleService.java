@@ -1,6 +1,5 @@
 package com.example.whenwhere.Service;
 
-
 import com.example.whenwhere.Dto.BusytimeDto;
 import com.example.whenwhere.Dto.ScheduleDto;
 import com.example.whenwhere.Entity.Schedule;
@@ -94,6 +93,9 @@ public class ScheduleService {
                 busytimeDto.getMembers(),
                 busytimeDto.getStartDate(),
                 busytimeDto.getEndDate());
+            for(int i = 0; i< schedules.size(); i++){
+                System.out.println(schedules.get(i).getEndTime());
+            }
             // 뽑아온 스케줄을 필터링하는 알고리즘
             for(int i = 0; i < schedules.size(); i++){
                 // 초기값 세팅
@@ -121,7 +123,8 @@ public class ScheduleService {
                 }
 
                 // 이전 스케줄과 현재 스캐줄의 시간이 곂치면
-                if(scheduleTmp.getEndTime().isAfter(schedules.get(i).getStartTime())){
+                if(scheduleTmp.getEndTime().isAfter(schedules.get(i).getStartTime()) ||
+                    scheduleTmp.getEndTime().isEqual(schedules.get(i).getStartTime())){
                     // 현재 객체의 끝시간만 늘려줌
                     scheduleTmp.setEndTime(schedules.get(i).getEndTime());
                 }
