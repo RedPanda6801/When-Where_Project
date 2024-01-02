@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    tools:context=".GroupSetting_normal">
+
+    <ImageView
+        android:id="@+id/arrowleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/arrowleft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/profile"
+        android:layout_width="328dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="33dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/arrowleft">
+
+        <View
+            android:id="@+id/rectangle_4"
+            android:layout_width="328dp"
+            android:layout_height="62dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rectangle_4"
+
+            />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="김수한무거북이와두루미"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/addcalender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="33dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="시간표 추가하기"
+            android:textColor="#ACACAC"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="293dp"
+            android:background="@drawable/settings" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="멤버 관리"
+        android:layout_marginTop="45dp"
+        android:layout_marginLeft="17dp"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile" />
+
+"
+
+
+    <RelativeLayout
+        android:id="@+id/addMember"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="71dp"
+        android:background="@drawable/edge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile">
+
+        <TextView
+            android:id="@+id/addMemberText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="멤버 초대하기"
+            android:textColor="#000000"
+            android:textSize="17sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/exitMember"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/edge"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addMember">
+
+        <TextView
+            android:id="@+id/exitMemberText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="멤버 내보내기"
+            android:textColor="#000000"
+            android:textSize="17sp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/settingGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="모임 관리"
+        android:layout_marginTop="45dp"
+        android:layout_marginLeft="17dp"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exitMember" />
+
+    <RelativeLayout
+        android:id="@+id/exitGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/edge"
+        android:layout_marginTop="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingGroup">
+
+        <TextView
+            android:id="@+id/exitGroupText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="모임 나가기"
+            android:textColor="#000000"
+            android:textSize="17sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/removeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/edge"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exitGroup">
+
+        <TextView
+            android:id="@+id/removeGroupText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="모임 없애기"
+            android:textColor="#000000"
+            android:textSize="17sp"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login">
+
+    <ImageView
+        android:id="@+id/arrowleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/arrowleft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="164dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="로그인"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="216dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="216dp"
+        android:hint="@string/prompt_email"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true"
+        android:fontFamily="@font/pretendard_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="216dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/prompt_password"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        android:fontFamily="@font/pretendard_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/forgot_pass"
+        android:text="Forgot password?"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/pretendard_extralight"
+        android:textColor="#F04242"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintLeft_toLeftOf="@id/password"
+
+
+        />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/login"
+        android:layout_width="216dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:enabled="true"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="Log in"
+        android:textSize="13sp"
+        android:visibility="visible"
+        android:background="@drawable/rectangle_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        android:textAllCaps="false"
+        />
+
+
+    <TextView
+        android:id="@+id/question"
+        android:text="Don’t have an account?"
+        android:layout_marginTop="38dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/pretendard_regular"
+
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/login"
+        app:layout_constraintLeft_toLeftOf="@id/login"
+
+
+
+        />
+
+    <TextView
+        android:id="@+id/registet"
+        android:text="Register"
+        android:layout_marginTop="38dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/pretendard_extralight"
+        android:textColor="#F04242"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/login"
+        app:layout_constraintRight_toRightOf="@id/login"
+
+        />
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
