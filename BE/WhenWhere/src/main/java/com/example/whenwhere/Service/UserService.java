@@ -2,12 +2,18 @@ package com.example.whenwhere.Service;
 
 import com.example.whenwhere.Config.SecurityConfig;
 import com.example.whenwhere.Dto.UserDto;
+import com.example.whenwhere.Entity.Authority;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.UserRepository;
+import com.example.whenwhere.Util.SecurityUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -26,41 +32,48 @@ public class UserService {
         return userOptional;
     }
 
-    public boolean existedUser(String userId){
-        try{
-            Optional<User> userOptional = userRepository.findByUserId(userId);
-            if(userOptional.isPresent()){
-                return true;
-            }else{
-                return false;
-            }
-        }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return true;
-        }
-    }
-
-    public boolean join(UserDto userDto){
+    // DB에 항상 ROLE_USER와 ROLE_ADMIN이 존재해야 함
+    @Transactional
+    public boolean signup(UserDto userDto){
         // userDto의 필수 값 확인
         if(
                 userDto.getUserId() == null ||
                 userDto.getNickname() == null ||
                 userDto.getPassword() == null
         ){
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
-        userDto.setPassword(securityConfig.passwordEncoder().encode(userDto.getPassword()));
-        // 저장할 객체 세팅
-        User userObj = new User();
-        userObj = userObj.toEntity(userDto);
+        // 기존 유저에 대한 예외 처리
+        if(userRepository.findOneWithAuthoritiesByUserId(userDto.getUserId()).orElse(null) != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_ALREADY_EXISTED");
+        }
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER").build();
 
+        User user = User.builder()
+                .userId(userDto.getUserId())
+                .password(securityConfig.passwordEncoder().encode(userDto.getPassword()))
+                .nickname(userDto.getNickname())
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
+
+        // 서버 에러에 대한 예외처리
         try{
-            userRepository.save(userObj);
+            userRepository.save(user);
         }catch(Exception e){
-            System.out.println(String.format("[Error] %s", e));
-            return false;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
         return true;
+    }
+
+    @Transactional
+    public Optional<User> getUserWithAuthorities(String userId){
+        return userRepository.findOneWithAuthoritiesByUserId(userId);
+    }
+
+    @Transactional
+    public Optional<User> getMyUserWithAuthorities(){
+        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUserId);
     }
 }

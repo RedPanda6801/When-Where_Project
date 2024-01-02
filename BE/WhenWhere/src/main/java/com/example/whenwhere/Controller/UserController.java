@@ -7,6 +7,7 @@ import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Jwt.JwtFilter;
 import com.example.whenwhere.Jwt.TokenProvider;
 import com.example.whenwhere.Service.UserService;
+import com.example.whenwhere.Util.CustomExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,41 +22,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("/api")
 public class UserController {
 
     private final TokenProvider tokenProvider;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CustomExceptionHandler customExceptionHandler;
 
     public UserController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder){
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    @PostMapping("/user/join")
+    @PostMapping("/user/signup")
     @ResponseBody
-    public ResponseEntity<ResponseDto> Join(@RequestBody UserDto userDto){
+    public ResponseEntity<String> signup(@RequestBody UserDto userDto){
         ResponseDto response = new ResponseDto();
-        // 유저가 존재하는지부터 확인
-        boolean isUser = userService.existedUser(userDto.getUserId());
-        // 존재하면 회원가입 거부
-        if(isUser){
-            response.setResponse("User is Already Existed", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
         // 존재하지 않으면 회원가입 서비스 호출
-        boolean result = userService.join(userDto);
-        // 성공 실패 시 Error 응답
-        if(!result){
-            response.setResponse("Failed to Create User", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        try{
+            userService.signup(userDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch(Exception e) {
+            return new ResponseEntity<String>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
-        // 성공하면 생성했다는 응답 전송
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/user/auth")
