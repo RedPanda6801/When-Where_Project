@@ -2,6 +2,7 @@ package com.example.whenwhere.Entity;
 
 import com.example.whenwhere.Dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -72,5 +73,15 @@ public class User {
                 .password(dto.getPassword())
                 .activated(true)
                 .build();
+    }
+
+    public void update(@Nullable String password, @Nullable String nickname, @Nullable String location){
+        this.setPassword(password);
+        this.setNickname(nickname);
+        this.setLocation(location);
+    }
+
+    public void updateAuthority(Set<Authority> authorities){
+        this.setAuthorities(authorities);
     }
 }

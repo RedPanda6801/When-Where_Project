@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("/api/user")
@@ -43,11 +42,10 @@ public class UserController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
+    // 회원가입 로직
     @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<String> signup(@RequestBody UserDto userDto){
-        ResponseDto response = new ResponseDto();
-        // 존재하지 않으면 회원가입 서비스 호출
         try{
             userService.signup(userDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -56,9 +54,11 @@ public class UserController {
         }
     }
 
+    // 로그인 로직
     @PostMapping("/auth")
     @ResponseBody
     public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto){
+        // 아이디, 비밀번호에 대한 인증 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
 

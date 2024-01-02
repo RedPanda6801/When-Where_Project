@@ -1,17 +1,21 @@
 package com.example.whenwhere.Service;
 
 import com.example.whenwhere.Dto.GroupDto;
+import com.example.whenwhere.Entity.Authority;
 import com.example.whenwhere.Entity.Group;
 import com.example.whenwhere.Entity.GroupMembers;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.GroupMembersRepository;
 import com.example.whenwhere.Repository.GroupRepository;
 import com.example.whenwhere.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class GroupService {
@@ -28,6 +32,7 @@ public class GroupService {
         return groupRepository.findById(id);
     }
 
+    @Transactional
     public boolean create(Integer id, GroupDto groupDto){
         // Validation
         if(groupDto.getGroupName() == null){
@@ -51,6 +56,16 @@ public class GroupService {
 
         // DB에 저장하는 로직 호출
         try{
+            // 권한 부여
+            Authority authority = Authority.builder()
+                    .authorityName("ROLE_HOST").build();
+
+            //기존 권한에 추가
+            Set<Authority> authorities = host.getAuthorities();
+            authorities.add(authority);
+
+            host.updateAuthority(authorities);
+
             Group created = groupRepository.save(group);
 
             // 그룹장도 그룹에 가입되어 있어야 함
