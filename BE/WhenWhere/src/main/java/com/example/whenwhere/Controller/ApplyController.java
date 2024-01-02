@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/api/apply")
 public class ApplyController {
 
     @Autowired
     private ApplyService applyService;
     //  지원 전에 로그인 상태여야 한다.
-    @PostMapping("/api/group/apply-group/{user_id}")
+    @PostMapping("/apply-group/{user_id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> applyGroup(@PathVariable Integer user_id, @RequestBody ApplyDto applyDto){
         ResponseDto response = new ResponseDto();
@@ -32,7 +33,7 @@ public class ApplyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/api/group/get-apply/{host_id}/{group_id}")
+    @GetMapping("/get-apply/{host_id}/{group_id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> getApplies(@PathVariable Integer host_id, @PathVariable Integer group_id){
         ResponseDto response = new ResponseDto();
@@ -49,7 +50,7 @@ public class ApplyController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/api/group/process-apply/{host_id}")
+    @PostMapping("/process-apply/{host_id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> processApply(@PathVariable Integer host_id, @RequestBody ApplyDto applyDto){
         ResponseDto response = new ResponseDto();

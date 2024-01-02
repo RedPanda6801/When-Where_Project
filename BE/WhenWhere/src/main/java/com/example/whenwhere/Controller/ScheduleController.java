@@ -9,19 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("/api/schedule")
 public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @PostMapping("/api/schedule/add/{id}")
+    @PostMapping("/add/{id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> addSchedule(@PathVariable Integer id, @RequestBody ScheduleDto scheduleDto){
         ResponseDto response = new ResponseDto();
@@ -37,7 +35,7 @@ public class ScheduleController {
     }
 
     // 빈 시간 계산 API
-    @PostMapping("/api/schedule/busytime-group")
+    @PostMapping("/busytime-group")
     @ResponseBody
     public ResponseEntity<ResponseDto> busyTimeInGroupSchedule(@RequestBody BusytimeDto busytimeDto){
         ResponseDto response = new ResponseDto();

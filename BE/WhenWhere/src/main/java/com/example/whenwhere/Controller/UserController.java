@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final TokenProvider tokenProvider;
@@ -43,7 +43,7 @@ public class UserController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<String> signup(@RequestBody UserDto userDto){
         ResponseDto response = new ResponseDto();
@@ -56,7 +56,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/auth")
+    @PostMapping("/auth")
     @ResponseBody
     public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto){
         UsernamePasswordAuthenticationToken authenticationToken =

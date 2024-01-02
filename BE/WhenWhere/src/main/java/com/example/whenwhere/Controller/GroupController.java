@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/api/group")
 public class GroupController {
 
     @Autowired
     private GroupService groupService;
 
-    @PostMapping("/api/group/create-group/{host_id}")
+    @PostMapping("/create-group/{host_id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> createGroup(@PathVariable Integer host_id, @RequestBody GroupDto groupDto){
         ResponseDto response = new ResponseDto();
@@ -34,7 +35,7 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/group/get-members/{group_id}/{host_id}")
+    @GetMapping("/get-members/{group_id}/{host_id}")
     @ResponseBody
     public ResponseEntity<ResponseDto> getmembersInGroup(@PathVariable Integer group_id, @PathVariable Integer host_id){
         ResponseDto response = new ResponseDto();
