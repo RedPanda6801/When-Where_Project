@@ -2,6 +2,7 @@ package com.example.whenwhere.Repository;
 
 import com.example.whenwhere.Entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
+    @EntityGraph(attributePaths = "authorities")
+    Optional<User> findOneWithAuthoritiesByUserId(String userid);
+
     Optional<User> findByUserId(String userId);
 
     @Query("SELECT a.id, u.id, u.userId, u.nickname FROM User u LEFT JOIN u.applies a WHERE a.group.id = :gid AND a.state = false")

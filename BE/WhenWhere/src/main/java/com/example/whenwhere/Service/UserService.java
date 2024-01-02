@@ -1,15 +1,21 @@
 package com.example.whenwhere.Service;
 
+import com.example.whenwhere.Config.SecurityConfig;
 import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class UserService {
+
+    @Autowired
+    SecurityConfig securityConfig;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -44,6 +50,7 @@ public class UserService {
         ){
             return false;
         }
+        userDto.setPassword(securityConfig.passwordEncoder().encode(userDto.getPassword()));
         // 저장할 객체 세팅
         User userObj = new User();
         userObj = userObj.toEntity(userDto);

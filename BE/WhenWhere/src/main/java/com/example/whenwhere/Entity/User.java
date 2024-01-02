@@ -18,6 +18,7 @@ public class User {
 
     @JsonIgnore
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -58,10 +59,9 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            joinColumns = {@JoinColumn(name = "id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name="authority_name", referencedColumnName = "authority_name")}
     )
-
     private Set<Authority> authorities;
 
     public static User toEntity(UserDto dto){
@@ -70,6 +70,7 @@ public class User {
                 .nickname(dto.getNickname())
                 .location(dto.getLocation())
                 .password(dto.getPassword())
+                .activated(true)
                 .build();
     }
 }

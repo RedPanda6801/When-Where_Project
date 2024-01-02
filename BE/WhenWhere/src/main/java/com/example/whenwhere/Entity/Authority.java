@@ -14,5 +14,5 @@ public class Authority {
 
     @Id
     @Column(name="authority_name")
-    private Integer authorityName;
+    private String authorityName;
 }
