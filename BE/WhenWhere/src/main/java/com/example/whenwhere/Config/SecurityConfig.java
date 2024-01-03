@@ -56,12 +56,24 @@ public class SecurityConfig{
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        // 모든 이에게 허용
                         .requestMatchers(
-                                new AntPathRequestMatcher("/api/**")
-                        ).permitAll()
+                                new AntPathRequestMatcher("/api/user/**"),
+                                new AntPathRequestMatcher("/api/group/**")
+                            ).permitAll()
+                        // 회원인 이에게 허용
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/api/schedule/**"),
+                                new AntPathRequestMatcher("/api/group/get-members/**"),
+                                new AntPathRequestMatcher("/api/apply/apply-group/**")
+                            ).hasAuthority("ROLE_USER")
+                        // 그룹 호스트에게 적용
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/api/apply/get-apply/**"),
+                                new AntPathRequestMatcher("/api/apply/process-apply/**")
+                        ).hasAuthority("ROLE_HOST")
                         .anyRequest().authenticated()
                 )
-
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
