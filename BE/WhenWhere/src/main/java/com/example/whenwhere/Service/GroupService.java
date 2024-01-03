@@ -10,7 +10,9 @@ import com.example.whenwhere.Repository.GroupRepository;
 import com.example.whenwhere.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,8 +21,6 @@ import java.util.Set;
 
 @Service
 public class GroupService {
-    @Autowired
-    private UserService userService;
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -33,18 +33,17 @@ public class GroupService {
     }
 
     @Transactional
-    public boolean create(Integer id, GroupDto groupDto){
+    public void create(GroupDto groupDto, String userId){
         // Validation
         if(groupDto.getGroupName() == null){
-            System.out.println("[Error] Bad Data Input");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
 
         // 유저 가져오기
-        Optional<User> userOptional = userService.getUserById(id);
+        Optional<User> userOptional = userRepository.findByUserId(userId);
         // 유저가 없으면 예외처리
-        if(userOptional.isEmpty()){
-            return false;
+        if(!userOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
         }
         User host = userOptional.get();
 
@@ -76,29 +75,23 @@ public class GroupService {
 
             groupMembersRepository.save(membersObj);
         }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return false;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
-        return true;
     }
 
-    public List<Object> getMembers(Integer groupId, Integer hostId){
+    public List<Object> getMembers(Integer groupId){
         // Validation
-        if(groupId == null || hostId == null){
-            System.out.println("[Error] Bad Data Input");
-            return null;
+        if(groupId == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
         try{
             // 비지니스 로직(group의 member 가져오기)
-            List<Object> members = userRepository.findMembersByGroup(groupId, hostId);
+            List<Object> members = userRepository.findMembersByGroup(groupId);
 
             return members;
 
         }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return null;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
 

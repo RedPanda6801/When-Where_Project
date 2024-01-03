@@ -26,17 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/api/user")
 public class UserController {
-
-    private final TokenProvider tokenProvider;
-
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     public UserController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder){
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;

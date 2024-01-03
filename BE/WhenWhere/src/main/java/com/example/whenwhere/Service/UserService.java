@@ -34,7 +34,7 @@ public class UserService {
 
     // DB에 항상 ROLE_USER와 ROLE_ADMIN이 존재해야 함
     @Transactional
-    public boolean signup(UserDto userDto){
+    public void signup(UserDto userDto){
         // userDto의 필수 값 확인
         if(
                 userDto.getUserId() == null ||
@@ -64,7 +64,6 @@ public class UserService {
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
-        return true;
     }
 
     @Transactional

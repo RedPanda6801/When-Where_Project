@@ -5,8 +5,13 @@ import com.example.whenwhere.Dto.ScheduleDto;
 import com.example.whenwhere.Entity.Schedule;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.ScheduleRepository;
+import com.example.whenwhere.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,50 +24,47 @@ public class ScheduleService {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public boolean add(ScheduleDto scheduleDto, Integer id){
+    public void add(ScheduleDto scheduleDto, String userId){
         // Validation
         if(
             scheduleDto.getTitle() == null ||
             scheduleDto.getStartTime() == null ||
             scheduleDto.getEndTime() == null
         ){
-            System.out.println("[Error] Bad Data Input");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
+
         // time 값의 예외 처리
         LocalDateTime startTime = scheduleDto.getStartTime();
         LocalDateTime endTime = scheduleDto.getEndTime();
         // 1. time 의 Date 값은 일정해야 함(날짜 일정) -> End Time이 다음날로 넘어가는 일이 없도록 함
         if(startTime.getDayOfMonth() != endTime.getDayOfMonth()){
-            System.out.println("[Error] Input Time Error 1");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INPUT_TIME_ERROR_1");
         }
         // 2. Start Time > End Time 에 대한 예외 처리
         if(startTime.getHour() == endTime.getHour()){
             // 분 까지만 예외처리 (최소 30분 스케줄을 잡아야 함)
             if(startTime.getMinute() >= endTime.getMinute() - 30){
-                System.out.println("[Error] Input Time Error 2");
-                return false;
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INPUT_TIME_ERROR_2");
             }
         }
         else if(startTime.getHour() > endTime.getHour()){
-            System.out.println("[Error] Input Time Error 3");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INPUT_TIME_ERROR_3");
         }
         else if( // 최소 30분의 스케줄은 잡아야 함
                 endTime.getHour() - startTime.getHour() == 1 &&
                 Math.abs(startTime.getMinute() - endTime.getMinute()) > 30
         ){
-            System.out.println("[Error] Input Time Error 4");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INPUT_TIME_ERROR_4");
         }
 
         // 매핑할 User 가져오기
-        Optional<User> userOptional = userService.getUserById(id);
+        Optional<User> userOptional = userRepository.findByUserId(userId);
         if(!userOptional.isPresent()){
-            System.out.println("[Error] User is Not Existed");
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
         }
         User user = userOptional.get();
 
@@ -76,11 +78,8 @@ public class ScheduleService {
         try{
             scheduleRepository.save(scheduleObj);
         }catch(Exception e){
-            System.out.println(String.format("[Error] %s", e));
-            return false;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
-
-        return true;
     }
 
     public List<Schedule> getSortedTimesByDates(BusytimeDto busytimeDto){

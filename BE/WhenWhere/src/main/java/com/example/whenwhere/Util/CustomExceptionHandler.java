@@ -35,7 +35,7 @@ public class CustomExceptionHandler {
         try{
             String message = e.getMessage();
             String detail = message.split(" ")[2];
-            return detail;
+            return detail.replaceAll("\"", "");
         }catch(Exception ex){
             return "EMPTY";
         }
