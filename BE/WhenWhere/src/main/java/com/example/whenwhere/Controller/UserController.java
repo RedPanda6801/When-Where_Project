@@ -39,14 +39,14 @@ public class UserController {
     }
 
     // 회원가입 로직
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     @ResponseBody
     public ResponseEntity<String> signup(@RequestBody UserDto userDto){
         try{
             userService.signup(userDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch(Exception e) {
-            return new ResponseEntity<String>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
     }
 

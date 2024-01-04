@@ -86,15 +86,13 @@ public class ScheduleService {
         List<Schedule> result = new ArrayList<>();
         Schedule scheduleTmp = null;
 
-        try{// 지정된 날짜에 대한 유저들의 스케줄을 뽑아오기
+        try{ // 지정된 날짜에 대한 유저들의 스케줄을 뽑아오기
             List<Schedule> schedules =
                 scheduleRepository.findSortedScheduleByDates(
                 busytimeDto.getMembers(),
                 busytimeDto.getStartDate(),
                 busytimeDto.getEndDate());
-            for(int i = 0; i< schedules.size(); i++){
-                System.out.println(schedules.get(i).getEndTime());
-            }
+
             // 뽑아온 스케줄을 필터링하는 알고리즘
             for(int i = 0; i < schedules.size(); i++){
                 // 초기값 세팅
@@ -139,8 +137,7 @@ public class ScheduleService {
                 }
             }
         }catch(Exception e){
-            System.out.println(String.format("[Error] %s", e));
-            return null;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNER_SERVER_ERROR");
         }
         return result;
     }

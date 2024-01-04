@@ -1,11 +1,15 @@
 package com.example.whenwhere.Controller;
 
 import com.example.whenwhere.Dto.ApplyDto;
+import com.example.whenwhere.Dto.ObjectDto;
 import com.example.whenwhere.Dto.ResponseDto;
 import com.example.whenwhere.Service.ApplyService;
+import com.example.whenwhere.Util.CustomExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,51 +21,47 @@ public class ApplyController {
 
     @Autowired
     private ApplyService applyService;
+
+    @Autowired
+    private CustomExceptionHandler customExceptionHandler;
+
     //  지원 전에 로그인 상태여야 한다.
-    @PostMapping("/apply-group/{user_id}")
+    @PostMapping("/apply-group")
     @ResponseBody
-    public ResponseEntity<ResponseDto> applyGroup(@PathVariable Integer user_id, @RequestBody ApplyDto applyDto){
-        ResponseDto response = new ResponseDto();
-        // 유저를 호스트로 하는 그룹 생성 서비스 호출
-        boolean result = applyService.apply(user_id, applyDto);
-        // 성공 실패 시 Error 응답
-        if(!result){
-            response.setResponse("Failed to Apply Group", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> applyGroup(@RequestBody ApplyDto applyDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            // 유저를 호스트로 하는 그룹 생성 서비스 호출
+            applyService.apply(applyDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
-        // 성공하면 생성했다는 응답 전송
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/get-apply/{host_id}/{group_id}")
+    @GetMapping("/get-apply/{groupId}")
     @ResponseBody
-    public ResponseEntity<ResponseDto> getApplies(@PathVariable Integer host_id, @PathVariable Integer group_id){
-        ResponseDto response = new ResponseDto();
+    public ResponseEntity<ObjectDto> getApplies(@PathVariable Integer groupId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 유저를 호스트로 하는 그룹 생성 서비스 호출
-        List<Object> applies = applyService.getAllApplyByGroup(host_id, group_id);
-        // 성공 실패 시 Error 응답
-        if(applies == null){
-            response.setResponse("Failed to Get Group Applies", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        try{
+            List<Object> applies = applyService.getAllApplyByGroup(groupId, authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(applies, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
-        // 가져온 apply를 응답값에 넣기
-        response.setResponse("Get Applies Success", applies, HttpStatus.OK);
-        // 성공하면 생성했다는 응답 전송
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/process-apply/{host_id}")
+    @PostMapping("/process-apply")
     @ResponseBody
-    public ResponseEntity<ResponseDto> processApply(@PathVariable Integer host_id, @RequestBody ApplyDto applyDto){
-        ResponseDto response = new ResponseDto();
+    public ResponseEntity<String> processApply(@RequestBody ApplyDto applyDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 해당 apply에 대한 처리 서비스 호출
-        boolean result =  applyService.process(host_id, applyDto);
-        // 성공 실패 시 Error 응답
-        if(!result){
-            response.setResponse("Failed to Apply Group", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        try{
+            applyService.process(applyDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
-        // 성공하면 생성했다는 응답 전송
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
