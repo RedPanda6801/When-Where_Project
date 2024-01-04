@@ -1,25 +1,27 @@
 package com.example.whenwhere.Service;
 
 import com.example.whenwhere.Dto.ApplyDto;
-import com.example.whenwhere.Entity.Apply;
-import com.example.whenwhere.Entity.Group;
-import com.example.whenwhere.Entity.GroupMembers;
-import com.example.whenwhere.Entity.User;
+import com.example.whenwhere.Entity.*;
 import com.example.whenwhere.Repository.ApplyRepository;
 import com.example.whenwhere.Repository.GroupMembersRepository;
 import com.example.whenwhere.Repository.UserRepository;
+import com.example.whenwhere.Util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ApplyService {
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private GroupService groupService;
@@ -33,146 +35,130 @@ public class ApplyService {
     @Autowired
     private GroupMembersRepository groupMembersRepository;
 
-    public boolean apply(Integer id, ApplyDto applyDto){
+    public void apply(ApplyDto applyDto, String userId){
         // Validation
         if(
-                applyDto.getApplyGroupId() == null){
-            System.out.println("[Error] Bad Data Input");
-            return false;
+            applyDto.getApplyGroupId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
-
         // 유저 가져오기
-        Optional<User> userOptional = userService.getUserById(id);
-        // 유저가 없으면 예외처리
-        if(userOptional.isEmpty()){
-            return false;
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if(!userOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
         }
-        User applier = userOptional.get();
-
         // 그룹 가져오기
         Optional<Group> groupOptional = groupService.getGroupById(applyDto.getApplyGroupId());
-        if(groupOptional.isEmpty()){
-            System.out.println("[Error] Group is Not Existed");
-            return false;
+        if(!groupOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
         }
+
+        User applier = userOptional.get();
         Group group = groupOptional.get();
 
-        // applier == host이면 예외 처리
-        if(group.getHost().getId() == applier.getId()){
-            System.out.println("[Error] You are Host");
-            return false;
+        // 그룹 중복 지원 예외 처리
+        List<Integer> ids = applyRepository.findApplierInGroup(applier.getId(), group.getId());
+        if(ids.size() > 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ALREADY_APPLIED");
         }
 
-        // Apply 매핑 및 생성
-        Apply apply = new Apply();
-        apply.setApplier(applier);
-        apply.setGroup(group);
-        apply.setState(false);
-        apply.setAccepted(false);
-
-        // apply 중복 제거 필요
-
+        // 호스트면 이용 불가
+        if(SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "HOST_NOT_AVAILABLE");
+        }
         try{
+
+            // Apply 매핑 및 생성
+            Apply apply = new Apply();
+            apply.setApplier(applier);
+            apply.setGroup(group);
+            apply.setState(false);
+            apply.setAccepted(false);
+
             // 비지니스 로직 호출
             applyRepository.save(apply);
         }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return false;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
-
-        return true;
     }
 
-    public List<Object> getAllApplyByGroup(Integer hostId, Integer groupId){
+    public List<Object> getAllApplyByGroup(Integer groupId, String hostId){
         // Validation
         if(hostId == null || groupId == null){
-            // 예외처리 반드시 필요
-            System.out.println("[Error] Bad Data Input");
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
         // group 찾기
-        try{
-            Optional<Group> groupOptional = groupService.getGroupById(groupId);
-            if(groupOptional.isEmpty()){
-                System.out.println("[Error] Group is Not Existed");
-                return null;
-            }
-            Group group = groupOptional.get();
-            // 찾은 group과 host를 확인
-            if(group.getHost().getId() != hostId){
-                System.out.println("[Error] Forbidden Error");
-                return null;
-            }
+        Optional<Group> groupOptional = groupService.getGroupById(groupId);
+        if(groupOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
+        }
 
+        Optional<User> userOptional = userRepository.findByUserId(hostId);
+        if(!userOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
+        }
+
+        User host = userOptional.get();
+        Group group = groupOptional.get();
+        // 찾은 group과 host를 확인
+        if(!SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST")
+            || group.getHost().getId() != host.getId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+        try{
             // 비지니스 로직 호출 (group에 맞는 Applier 조인)
             List<Object> applies = userRepository.findAllUserByGroupId(group.getId());
-            // 리턴
             return applies;
         }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return null;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
 
     }
 
     @Transactional
-    public boolean process(Integer hostId, ApplyDto applyDto){
+    public void process(ApplyDto applyDto, String hostId){
         // Validation
-        if(hostId == null ||applyDto.getId() == null || applyDto.getDecide() == null){
-            // 예외처리 반드시 필요
-            System.out.println("[Error] Bad Data Input");
-            return false;
+        if(hostId == null || applyDto.getId() == null || applyDto.getDecide() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
         // apply 가져오기
         Optional<Apply> applyOptional = applyRepository.findById(applyDto.getId());
-        if(applyOptional.isEmpty()){
-            // 예외처리 반드시 필요
-            System.out.println("[Error] Apply is Not Existed");
-            return false;
+        if(!applyOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "APPLY_NOT_EXISTED");
         }
+        // 호스트 가져오기
+        Optional<User> userOptional = userRepository.findByUserId(hostId);
+        if(!userOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
+        }
+
         Apply apply = applyOptional.get();
-
-        // 처리 상태에 대한 예외 처리
-        if(apply.getState() == true){
-            System.out.println("[Error] Apply is Already Processed");
-            return false;
-        }
-
         // apply에 있는 그룹의 호스트가 요청자가 아니면 예외처리
-        if(apply.getGroup().getHost().getId() != hostId){
-            System.out.println("[Error] Forbidden Error");
-            return false;
+        if(!SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST")
+                || apply.getGroup().getHost().getId() != userOptional.get().getId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
         }
+        // 처리 상태에 대한 예외 처리
+        if(apply.getState()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "APPLY_ALREADY_PROCESSED");
+        }
+        try{
+            // 처리 여부에 True
+            apply.setState(true);
 
-        // apply 세팅
-        apply.setState(true);
-        // apply가 반려되면 apply의 accepted 상태를 false로 수정
-        if(applyDto.getDecide() == false){
-            try{
+            // 반려될 경우
+            if(!applyDto.getDecide()){
                 apply.setAccepted(false);
                 applyRepository.save(apply);
-                return true;
-            }catch(Exception e){
-                // 404 에러로 처리하되, 서버에 로그 저장
-                System.out.println(String.format("[Error] %s", e));
-                return false;
+            }else{ // 승인될 경우
+                apply.setAccepted(true);
+                // 멤버 추가 & apply 수정
+                GroupMembers membersObj = new GroupMembers();
+                membersObj = membersObj.toEntity(apply);
+                applyRepository.save(apply);
+                groupMembersRepository.save(membersObj);
             }
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
-        // 비지니스 로직 호출(Group에 멤버 추가)
-        try{
-            apply.setAccepted(true);
-            GroupMembers membersObj = new GroupMembers();
-            membersObj = membersObj.toEntity(apply);
-
-            applyRepository.save(apply);
-            groupMembersRepository.save(membersObj);
-        }catch(Exception e){
-            // 404 에러로 처리하되, 서버에 로그 저장
-            System.out.println(String.format("[Error] %s", e));
-            return false;
-        }
-        return true;
     }
 }

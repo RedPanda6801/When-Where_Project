@@ -1,6 +1,7 @@
 package com.example.whenwhere.Controller;
 
 import com.example.whenwhere.Dto.BusytimeDto;
+import com.example.whenwhere.Dto.ObjectDto;
 import com.example.whenwhere.Dto.ResponseDto;
 import com.example.whenwhere.Dto.ScheduleDto;
 import com.example.whenwhere.Entity.Schedule;
@@ -42,18 +43,13 @@ public class ScheduleController {
     // 빈 시간 계산 API
     @PostMapping("/busytime-group")
     @ResponseBody
-    public ResponseEntity<ResponseDto> busyTimeInGroupSchedule(@RequestBody BusytimeDto busytimeDto){
-        ResponseDto response = new ResponseDto();
+    public ResponseEntity<ObjectDto> busyTimeInGroupSchedule(@RequestBody BusytimeDto busytimeDto){
         // members의 schedule을 날짜 별로 정렬하여 가져오는 service
-        List<Schedule> sortedTimes =  scheduleService.getSortedTimesByDates(busytimeDto);
-        // 해당 service에 대한 예외 처리
-        if(sortedTimes == null){
-            response.setResponse("Failed to Sort Schedule", HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        try{
+            List<Schedule> sortedTimes =  scheduleService.getSortedTimesByDates(busytimeDto);
+            return new ResponseEntity<>(new ObjectDto(sortedTimes, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
-
-        // 해당 service에 대한 예외 처리
-        response.setResponse("Success to Sort", sortedTimes, HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
