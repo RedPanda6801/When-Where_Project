@@ -1,10 +1,8 @@
 package com.example.whenwhere.Controller;
 
 import com.example.whenwhere.Dto.*;
-import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Jwt.JwtFilter;
 import com.example.whenwhere.Jwt.TokenProvider;
-import com.example.whenwhere.Repository.UserRepository;
 import com.example.whenwhere.Service.UserService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
