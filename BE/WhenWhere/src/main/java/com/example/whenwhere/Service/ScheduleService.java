@@ -6,6 +6,8 @@ import com.example.whenwhere.Entity.Schedule;
 import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Repository.ScheduleRepository;
 import com.example.whenwhere.Repository.UserRepository;
+import com.example.whenwhere.Util.CustomExceptionHandler;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -22,17 +24,32 @@ import java.util.Optional;
 public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
+    public List<ScheduleDto> getMySchedules(String userId){
+        try{
+            User user = userRepository.findByUserId(userId).get();
+
+            List<Schedule> schedules = scheduleRepository.findAllByUserPk(user.getId());
+            List<ScheduleDto> result = new ArrayList<>();
+            for(Schedule schedule : schedules){
+                ScheduleDto dto = ScheduleDto.toDto(schedule);
+                result.add(dto);
+            }
+            return result;
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
 
     public void add(ScheduleDto scheduleDto, String userId){
         // Validation
         if(
-            scheduleDto.getTitle() == null ||
-            scheduleDto.getStartTime() == null ||
-            scheduleDto.getEndTime() == null
+            scheduleDto.getTitle() == null || scheduleDto.getTitle().equals("") ||
+            scheduleDto.getStartTime() == null || scheduleDto.getStartTime().equals("")||
+            scheduleDto.getEndTime() == null || scheduleDto.getEndTime().equals("")
         ){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
@@ -61,12 +78,29 @@ public class ScheduleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INPUT_TIME_ERROR_4");
         }
 
-        // 매핑할 User 가져오기
-        Optional<User> userOptional = userRepository.findByUserId(userId);
-        if(!userOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
+        // 매핑할 User와 해당하는 Schedule 가져오기
+        User user = userRepository.findByUserId(userId).get();
+        List<Schedule> currentSchedules = scheduleRepository.findAllByUserPk(user.getId());
+
+        // 중복 확인
+        for(Schedule currentSchedule : currentSchedules){
+            LocalDateTime currentStartTime = currentSchedule.getStartTime();
+            LocalDateTime currentEndTime = currentSchedule.getEndTime();
+            // 1. 추가할 스케줄이 기존 스케줄과 앞에 곂칠 때
+            if(startTime.isBefore(currentStartTime) && endTime.isAfter(currentStartTime)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "TIME_DUPLICATION_ERROR");
+            }
+            // 2. 추가할 스케줄이 기존 스케줄 사이에 곂칠 때
+            if((startTime.isEqual(currentStartTime) ||startTime.isAfter(currentStartTime))
+                    && (endTime.isBefore(currentEndTime) || endTime.isEqual(currentEndTime))){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "TIME_DUPLICATION_ERROR");
+            }
+            // 3. 추가할 스케줄이 기존 스케줄과 뒤에 곂칠 때
+            if(startTime.isBefore(currentEndTime)
+                    && (endTime.isEqual(currentEndTime) || endTime.isAfter(currentEndTime))){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "TIME_DUPLICATION_ERROR");
+            }
         }
-        User user = userOptional.get();
 
         // Dto -> Entity
         Schedule scheduleObj = new Schedule();
@@ -77,6 +111,37 @@ public class ScheduleService {
         // Create 로직 수행
         try{
             scheduleRepository.save(scheduleObj);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
+    @Transactional
+    public void modifySchedule(ScheduleDto scheduleDto, String userId){
+        if(scheduleDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleDto.getId());
+        if(!scheduleOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SCHEDULE_NOT_EXISTED");
+        }
+        // 유저 정보와 스케줄 가져오기
+        User user = userRepository.findByUserId(userId).get();
+        Schedule schedule = scheduleOptional.get();
+        // 본인 스케줄이 아니면 수정 X
+        if(user.getId() != schedule.getUser().getId()){
+            throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+        try{
+            // 필터링
+            String newTitle = (scheduleDto.getTitle() == null || scheduleDto.getTitle().equals("")) ?
+                    schedule.getTitle() : scheduleDto.getTitle();
+            String newDetail = (scheduleDto.getDetail() == null || scheduleDto.getDetail().equals("")) ?
+                    schedule.getDetail() : scheduleDto.getDetail();
+
+            // 비지니스 로직 호출
+            schedule.update(newTitle, newDetail);
+
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }

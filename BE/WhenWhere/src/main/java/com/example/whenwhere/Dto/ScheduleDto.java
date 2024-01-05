@@ -1,4 +1,5 @@
 package com.example.whenwhere.Dto;
+import com.example.whenwhere.Entity.Schedule;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ScheduleDto {
 
-    private int id;
+    private Integer id;
 
     private String title;
 
@@ -22,4 +23,13 @@ public class ScheduleDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 
+    public static ScheduleDto toDto(Schedule entity){
+        return ScheduleDto.builder()
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .detail(entity.getDetail())
+                .startTime(entity.getStartTime())
+                .endTime(entity.getEndTime())
+                .build();
+    }
 }

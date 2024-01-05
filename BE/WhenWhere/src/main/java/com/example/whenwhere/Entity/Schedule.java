@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
@@ -51,6 +52,11 @@ public class Schedule implements Cloneable{
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .build();
+    }
+
+    public void update(String title, String detail){
+        this.setTitle(title);
+        this.setDetail(detail);
     }
 
     @Override
