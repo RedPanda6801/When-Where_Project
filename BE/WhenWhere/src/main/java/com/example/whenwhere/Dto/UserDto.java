@@ -29,6 +29,7 @@ public class UserDto {
                 .password(entity.getPassword())
                 .nickname(entity.getNickname())
                 .location(entity.getLocation())
+                .activated(entity.isActivated())
                 .build();
     }
 }

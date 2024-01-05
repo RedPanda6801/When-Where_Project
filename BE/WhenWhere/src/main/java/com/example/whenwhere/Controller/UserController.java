@@ -1,11 +1,10 @@
 package com.example.whenwhere.Controller;
 
-import com.example.whenwhere.Dto.LoginDto;
-import com.example.whenwhere.Dto.ResponseDto;
-import com.example.whenwhere.Dto.TokenDto;
-import com.example.whenwhere.Dto.UserDto;
+import com.example.whenwhere.Dto.*;
+import com.example.whenwhere.Entity.User;
 import com.example.whenwhere.Jwt.JwtFilter;
 import com.example.whenwhere.Jwt.TokenProvider;
+import com.example.whenwhere.Repository.UserRepository;
 import com.example.whenwhere.Service.UserService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +17,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
+
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
@@ -69,4 +66,44 @@ public class UserController {
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
+    // 유저 개인정보 조회
+    @GetMapping("/get-user")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> getUser(){
+        // 로그인 된 유저 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            UserDto user = userService.getUser(authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(user, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
+
+    @PostMapping("/modify")
+    @ResponseBody
+    public ResponseEntity<String> modifyUser(@RequestBody UserDto userDto){
+        // 로그인 된 유저 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            userService.modify(userDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+        }
+    }
+
+    // Hard Delete
+    @PostMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<String> deleteUser(){
+        // 로그인 된 유저 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            userService.delete(authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+        }
+    }
 }

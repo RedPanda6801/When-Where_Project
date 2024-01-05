@@ -54,6 +54,7 @@ public class UserService {
                 .userId(userDto.getUserId())
                 .password(securityConfig.passwordEncoder().encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
+                .location(userDto.getLocation())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
@@ -74,5 +75,47 @@ public class UserService {
     @Transactional
     public Optional<User> getMyUserWithAuthorities(){
         return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUserId);
+    }
+
+    public UserDto getUser(String userId){
+        try{
+            User user = userRepository.findByUserId(userId).get();
+            user.setPassword(null);
+            return UserDto.toDto(user);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+    @Transactional
+    public void modify(UserDto userDto, String userId){
+        // VALIDATION CHECK
+        if(userDto.getNickname().equals("") && userDto.getLocation().equals("") && userDto.getPassword().equals("")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+        try{
+            // 이미 시큐리티에서 로그인 여부를 판단했기 때문에 바로 가져옴 -> 예외 발생 시 서버 에러
+            User user = userRepository.findByUserId(userId).get();
+            // 필터링
+            String newPassword = (userDto.getPassword() == null || userDto.getPassword().equals("")) ?
+                    user.getPassword() : securityConfig.passwordEncoder().encode(userDto.getPassword());
+            String newNickname = (userDto.getNickname() == null || userDto.getNickname().equals("")) ?
+                    user.getNickname() : userDto.getNickname();
+            String newLocation = (userDto.getLocation() == null || userDto.getLocation().equals("")) ?
+                    user.getLocation(): userDto.getLocation();
+            // 비지니스 로직 호출
+            user.update(newPassword, newNickname, newLocation);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
+    @Transactional
+    public void delete(String userId){
+        try{
+            User user = userRepository.findByUserId(userId).get();
+            userRepository.delete(user);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
     }
 }
