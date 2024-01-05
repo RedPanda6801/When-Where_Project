@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,6 +26,18 @@ public class ScheduleController {
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
+    @GetMapping("/get-schedule")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> getSchedule(){
+        // 세션을 유지하고 있는 유저의 아이디를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            List<ScheduleDto> schedules = scheduleService.getMySchedules(authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(schedules, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null,  customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
     @PostMapping("/add")
     @ResponseBody
     public ResponseEntity<String> addSchedule(@RequestBody ScheduleDto scheduleDto){
@@ -35,9 +48,23 @@ public class ScheduleController {
             scheduleService.add(scheduleDto, authentication.getName());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch(Exception e){
-            return new ResponseEntity<String>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
 
+    }
+
+    @PostMapping("/modify")
+    @ResponseBody
+    public ResponseEntity<String> modifySchedule(@RequestBody ScheduleDto scheduleDto){
+        try{
+            // 세션을 유지하고 있는 유저의 아이디를 가져옴
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            // 스케줄 수정 로직 구현
+            scheduleService.modifySchedule(scheduleDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+        }
     }
 
     // 빈 시간 계산 API

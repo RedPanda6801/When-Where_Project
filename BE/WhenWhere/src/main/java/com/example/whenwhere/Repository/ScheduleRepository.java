@@ -14,4 +14,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Query("SELECT s FROM User u LEFT JOIN u.schedules s WHERE s.user.id in :memberIds AND" +
             " DATE(s.startTime) BETWEEN :startDate AND :endDate ORDER BY s.startTime, s.endTime")
     List<Schedule> findSortedScheduleByDates(List<Integer> memberIds, Date startDate, Date endDate);
+
+    @Query("SELECT s FROM User u LEFT JOIN u.schedules s WHERE s.user.id = :id")
+    List<Schedule> findAllByUserPk(Integer id);
 }
