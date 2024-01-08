@@ -34,7 +34,9 @@ public class ScheduleService {
 
             List<Schedule> schedules = scheduleRepository.findAllByUserPk(user.getId());
             List<ScheduleDto> result = new ArrayList<>();
+
             for(Schedule schedule : schedules){
+                if(schedule == null) break;
                 ScheduleDto dto = ScheduleDto.toDto(schedule);
                 result.add(dto);
             }
@@ -82,8 +84,10 @@ public class ScheduleService {
         User user = userRepository.findByUserId(userId).get();
         List<Schedule> currentSchedules = scheduleRepository.findAllByUserPk(user.getId());
 
-        // 중복 확인
+        // 기존 스케줄이 있으면 중복 확인
+
         for(Schedule currentSchedule : currentSchedules){
+            if(currentSchedule == null) break;
             LocalDateTime currentStartTime = currentSchedule.getStartTime();
             LocalDateTime currentEndTime = currentSchedule.getEndTime();
             // 1. 추가할 스케줄이 기존 스케줄과 앞에 곂칠 때
@@ -100,6 +104,7 @@ public class ScheduleService {
                     && (endTime.isEqual(currentEndTime) || endTime.isAfter(currentEndTime))){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "TIME_DUPLICATION_ERROR");
             }
+
         }
 
         // Dto -> Entity
@@ -117,7 +122,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void modifySchedule(ScheduleDto scheduleDto, String userId){
+    public void modify(ScheduleDto scheduleDto, String userId){
         if(scheduleDto.getId() == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
@@ -205,5 +210,32 @@ public class ScheduleService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNER_SERVER_ERROR");
         }
         return result;
+    }
+
+    public void delete(ScheduleDto scheduleDto, String userId){
+        // VALIDATION
+        if(scheduleDto == null || scheduleDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION");
+        }
+        // 세션을 유지하는 유저가 삭제하려는 스케줄의 소유자인지 확인
+        User user = userRepository.findByUserId(userId).get();
+
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleDto.getId());
+        if(!scheduleOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SCHEDULE_NOT_EXISTED");
+        }
+        Schedule schedule = scheduleOptional.get();
+
+        if(!schedule.getUser().getId().equals(user.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+
+        // 해당 스케줄의 연관관계 해제 후 삭제
+        try{
+            schedule.setUser(null);
+            scheduleRepository.delete(schedule);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
     }
 }
