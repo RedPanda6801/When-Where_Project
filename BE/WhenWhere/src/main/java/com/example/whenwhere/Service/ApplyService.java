@@ -114,6 +114,18 @@ public class ApplyService {
 
     }
 
+    public List<Object> getMyApplies(String userId){
+        // 유저 가져오기
+        User user = userRepository.findByUserId(userId).get();
+
+        try{
+            List<Object> applies = applyRepository.findAllByUserId(user.getId());
+            return applies;
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
     @Transactional
     public void process(ApplyDto applyDto, String hostId){
         // Validation
@@ -158,6 +170,32 @@ public class ApplyService {
                 groupMembersRepository.save(membersObj);
             }
         }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
+    public void delete(ApplyDto applyDto, String userId){
+        // VALIDATION
+        if(applyDto == null || applyDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+        // 요청한 dto에 대한 권한 검증
+        User user = userRepository.findByUserId(userId).get();
+        Optional<Apply> applyOptional = applyRepository.findById(applyDto.getId());
+        if(!applyOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "APPLY_NOT_EXISTED");
+        }
+        Apply apply = applyOptional.get();
+        // apply 유저와 요청자 비교
+        if(!apply.getApplier().getId().equals(user.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+        // 연관관계 해제 후 apply 삭제
+        try{
+            apply.setApplier(null);
+            apply.setGroup(null);
+            applyRepository.delete(apply);
+        }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
