@@ -48,4 +48,9 @@ public class Group {
                 .attribute(dto.getAttribute())
                 .build();
     }
+
+    public void update(String groupName, String attribute){
+        this.setGroupName(groupName);
+        this.setAttribute(attribute);
+    }
 }

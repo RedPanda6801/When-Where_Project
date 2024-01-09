@@ -4,6 +4,7 @@ import com.example.whenwhere.Dto.ApplyDto;
 import com.example.whenwhere.Entity.*;
 import com.example.whenwhere.Repository.ApplyRepository;
 import com.example.whenwhere.Repository.GroupMembersRepository;
+import com.example.whenwhere.Repository.GroupRepository;
 import com.example.whenwhere.Repository.UserRepository;
 import com.example.whenwhere.Util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.Set;
 public class ApplyService {
 
     @Autowired
-    private GroupService groupService;
+    private GroupRepository groupRepository;
 
     @Autowired
     private ApplyRepository applyRepository;
@@ -42,17 +43,12 @@ public class ApplyService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
         // 유저 가져오기
-        Optional<User> userOptional = userRepository.findByUserId(userId);
-        if(!userOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
-        }
+        User applier = userRepository.findByUserId(userId).get();
         // 그룹 가져오기
-        Optional<Group> groupOptional = groupService.getGroupById(applyDto.getApplyGroupId());
+        Optional<Group> groupOptional = groupRepository.findById(applyDto.getApplyGroupId());
         if(!groupOptional.isPresent()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
         }
-
-        User applier = userOptional.get();
         Group group = groupOptional.get();
 
         // 그룹 중복 지원 예외 처리
@@ -86,19 +82,15 @@ public class ApplyService {
         if(hostId == null || groupId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
+
+        User host = userRepository.findByUserId(hostId).get();
         // group 찾기
-        Optional<Group> groupOptional = groupService.getGroupById(groupId);
+        Optional<Group> groupOptional = groupRepository.findById(groupId);
         if(groupOptional.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
         }
-
-        Optional<User> userOptional = userRepository.findByUserId(hostId);
-        if(!userOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
-        }
-
-        User host = userOptional.get();
         Group group = groupOptional.get();
+
         // 찾은 group과 host를 확인
         if(!SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST")
             || group.getHost().getId() != host.getId()){

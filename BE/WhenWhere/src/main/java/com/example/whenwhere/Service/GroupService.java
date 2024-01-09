@@ -23,29 +23,43 @@ import java.util.Set;
 public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private GroupMembersRepository groupMembersRepository;
 
-    public Optional<Group> getGroupById(Integer id){
-        return groupRepository.findById(id);
+    public List<Object> getMyGroups(String userId){
+        // 유저 가져오기
+        User user = userRepository.findByUserId(userId).get();
+
+        try{
+            // 유저의 PK로 유저의 그룹을 모두 가져오기
+            List<Object> myGroups = groupMembersRepository.findAllByUserPk(user.getId());
+            return myGroups;
+        }catch(Exception e){
+            System.out.println(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
     }
 
     @Transactional
     public void create(GroupDto groupDto, String userId){
         // Validation
-        if(groupDto.getGroupName() == null){
+        if(groupDto == null || groupDto.getGroupName() == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
 
         // 유저 가져오기
-        Optional<User> userOptional = userRepository.findByUserId(userId);
-        // 유저가 없으면 예외처리
-        if(!userOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
+        User host = userRepository.findByUserId(userId).get();
+
+        // 그룹 이름 중복 체크
+        Optional<Integer> groupPkOptional = groupRepository.findByGroupName(groupDto.getGroupName());
+        if(groupPkOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUPNAME_DUPLICATION_ERROR");
         }
-        User host = userOptional.get();
+
 
         // Dto -> Entity
         Group group = new Group();
@@ -94,5 +108,45 @@ public class GroupService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
+
+    @Transactional
+    public void modify(GroupDto groupDto, String userId){
+        // VALIDATION
+        if(groupDto == null || groupDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+        // 유저와 그룹 가져오기
+        User user = userRepository.findByUserId(userId).get();
+        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
+        if(!groupOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
+        }
+        Group group = groupOptional.get();
+
+        // 유저가 그룹의 호스트인지 확인
+        if(group.getHost().getId() != user.getId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+
+        // 그룹 이름 중복 체크
+        Optional<Integer> groupPkOptional = groupRepository.findByGroupName(groupDto.getGroupName());
+        if(groupPkOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUPNAME_DUPLICATION_ERROR");
+        }
+
+        // 수정 시작
+        try{
+            // Dto에서 필터링
+            String newGroupName = (groupDto.getGroupName() == null || groupDto.getGroupName().equals("")) ?
+                    group.getGroupName() : groupDto.getGroupName();
+            String newAttribute = (groupDto.getAttribute() == null || groupDto.getAttribute().equals("")) ?
+                    group.getAttribute() : groupDto.getAttribute();
+            // 비지니스 로직 호출
+            group.update(newGroupName, newAttribute);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
 
 }
