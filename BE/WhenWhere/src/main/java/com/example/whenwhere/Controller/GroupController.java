@@ -78,4 +78,17 @@ public class GroupController {
             return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
     }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<String> deleteGroup(@RequestBody GroupDto groupDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 그룹 서비스에서 삭제 로직 호출
+        try{
+            groupService.delete(groupDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+        }
+    }
 }

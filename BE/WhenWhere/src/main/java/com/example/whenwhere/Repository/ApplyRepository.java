@@ -16,4 +16,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Integer> {
 
     @Query("SELECT a.id, a.accepted, a.state FROM Apply a WHERE a.applier.id = :userId")
     List<Object> findAllByUserId(@Param("userId") Integer userId);
+
+    @Query("SELECT a FROM Apply a WHERE a.group.id = :groupId")
+    List<Apply> findAllByGroupId(@Param("groupId") Integer groupId);
 }

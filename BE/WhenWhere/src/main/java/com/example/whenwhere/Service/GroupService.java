@@ -1,10 +1,8 @@
 package com.example.whenwhere.Service;
 
 import com.example.whenwhere.Dto.GroupDto;
-import com.example.whenwhere.Entity.Authority;
-import com.example.whenwhere.Entity.Group;
-import com.example.whenwhere.Entity.GroupMembers;
-import com.example.whenwhere.Entity.User;
+import com.example.whenwhere.Entity.*;
+import com.example.whenwhere.Repository.ApplyRepository;
 import com.example.whenwhere.Repository.GroupMembersRepository;
 import com.example.whenwhere.Repository.GroupRepository;
 import com.example.whenwhere.Repository.UserRepository;
@@ -29,6 +27,9 @@ public class GroupService {
 
     @Autowired
     private GroupMembersRepository groupMembersRepository;
+
+    @Autowired
+    private ApplyRepository applyRepository;
 
     public List<Object> getMyGroups(String userId){
         // 유저 가져오기
@@ -148,5 +149,53 @@ public class GroupService {
         }
     }
 
+    @Transactional
+    public void delete(GroupDto groupDto, String userId){
+        // VALIDATION
+        if(groupDto == null || groupDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
 
+        // 유저와 그룹 가져오기
+        User user = userRepository.findByUserId(userId).get();
+        Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
+        if(!groupOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
+        }
+        Group group = groupOptional.get();
+
+        // 유저가 그룹의 호스트여야 삭제가 가능
+        if(!group.getHost().getId().equals(user.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+
+        try{
+            // 그룹의 지원서 모두 삭제
+            List<Apply> applies = applyRepository.findAllByGroupId(group.getId());
+            for(Apply apply : applies){
+                if(apply == null) continue;
+                apply.setGroup(null);
+                apply.setApplier(null);
+                apply.setGroup(null);
+                applyRepository.delete(apply);
+            }
+
+            // 그룹 멤버 삭제
+            List<GroupMembers> groupMembers = groupMembersRepository.findAllByGroupId(group.getId());
+            for(GroupMembers member : groupMembers){
+                if(member == null) continue;
+                member.setGroup(null);
+                member.setUser(null);
+                groupMembersRepository.delete(member);
+            }
+
+            // 그룹 삭제
+            group.setGroupMembers(null);
+            group.setHost(null);
+            group.setApplies(null);
+            groupRepository.delete(group);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
 }
