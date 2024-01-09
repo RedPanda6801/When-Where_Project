@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class GroupDto {
 
-    private int id;
+    private Integer id;
 
     private String groupName;
 

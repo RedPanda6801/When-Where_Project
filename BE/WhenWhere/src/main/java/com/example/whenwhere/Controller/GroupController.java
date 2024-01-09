@@ -23,23 +23,37 @@ public class GroupController {
 
     @Autowired
     private GroupService groupService;
+
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
-    @PostMapping("/create-group")
+    @GetMapping("/get-my-groups")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> getMyGroups(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            List<Object> groups = groupService.getMyGroups(authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(groups, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
+
+    @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<String> createGroup( @RequestBody GroupDto groupDto){
+        // 세션을 유지하고 있는 유저의 아이디를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            // 세션을 유지하고 있는 유저의 아이디를 가져옴
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             // 유저를 호스트로 하는 그룹 생성 서비스 호출
             groupService.create(groupDto, authentication.getName());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<String>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
     }
 
+    // 속한 그룹이 여러 개일 수 있으므로 파라미터로 그룹 PK를 받아옴
     @GetMapping("/get-members/{group_id}")
     @ResponseBody
     public ResponseEntity<ObjectDto> getmembersInGroup(@PathVariable Integer group_id){
@@ -52,4 +66,16 @@ public class GroupController {
         }
     }
 
+    @PostMapping("/modify")
+    @ResponseBody
+    public ResponseEntity<String> modifyGroup(@RequestBody GroupDto groupDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 그룹 서비스에서 수정 로직 호출
+        try{
+            groupService.modify(groupDto, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+        }
+    }
 }
