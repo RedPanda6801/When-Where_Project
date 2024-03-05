@@ -4,6 +4,27 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: root
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+        registration:
+          kakao:
+            client-id: 4f9a6df343dc0990e161654dbcc833e4
+            #client-secret: w6HfmL88wvF9rXxbtauH5hGDvZZSbmv8
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/local/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
 
   jackson:
     serialization:
