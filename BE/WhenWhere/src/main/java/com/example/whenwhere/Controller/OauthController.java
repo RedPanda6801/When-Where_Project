@@ -3,15 +3,18 @@ package com.example.whenwhere.Controller;
 import com.example.whenwhere.Dto.BodyDto;
 import com.example.whenwhere.Dto.ObjectDto;
 import com.example.whenwhere.Dto.TokenDto;
+import com.example.whenwhere.Dto.UserDto;
+import com.example.whenwhere.Jwt.JwtOauthTokenCheck;
+import com.example.whenwhere.Service.UserService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -20,8 +23,47 @@ public class OauthController {
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/oauth")
     public String oauthTest(){return "oauth";}
+
+    // 해당 카카오 로그인한 회원이 우리 회원인지 확인
+    // body에 카카오 엑세스 토큰을 넣고 요청
+    @PostMapping("/oauth/sign-check")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> signCheck(@RequestBody TokenDto tokenDto){
+        boolean isLogin = false;
+
+        try{
+            // 토큰 유효성 검사
+            JwtOauthTokenCheck jwtOauthTokenCheck = new JwtOauthTokenCheck();
+            isLogin = jwtOauthTokenCheck.oauthTokenChecker(tokenDto.getToken());
+
+            // 카카오 토큰 만료 시 401 에러
+            if(!isLogin){
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+
+            // 카카오에서 토큰으로 이메일 가져오기
+            String email = jwtOauthTokenCheck.getEmail(tokenDto);
+            if(email == null){
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+            // 이메일 값으로 유저 정보 찾기
+            UserDto userDto = userService.getUser(email);
+            // 유저를 찾지 못했을 때 -> 로그인 실패 또는 회원 가입 창으로 redirection
+            if(userDto == null){
+                return new ResponseEntity<>(new ObjectDto(isLogin, "회원가입 필요 계정"), HttpStatus.OK);
+            }
+            // 유저를 찾았을 때 -> 로그인 성공
+            String userEmail = userDto.getUserId();
+            return new ResponseEntity<>(new ObjectDto(userEmail, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null,  customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
 
     @GetMapping("/local/oauth2/code/kakao")
     @ResponseBody

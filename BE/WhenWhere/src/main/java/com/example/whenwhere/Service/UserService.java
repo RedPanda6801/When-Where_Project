@@ -79,7 +79,13 @@ public class UserService {
 
     public UserDto getUser(String userId){
         try{
-            User user = userRepository.findByUserId(userId).get();
+            Optional<User> userOptional = userRepository.findByUserId(userId);
+            // 없을 때의 에러 처리
+            if(userOptional.isEmpty()){
+                return null;
+            }
+            // 있으면 비밀번호 미공개 이후 넘겨주기
+            User user = userOptional.get();
             user.setPassword(null);
             return UserDto.toDto(user);
         }catch(Exception e){
