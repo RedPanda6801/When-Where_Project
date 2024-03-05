@@ -13,10 +13,11 @@ import java.util.List;
 
 @Service
 public class Ouath2UserService extends DefaultOAuth2UserService {
+
+    // 로그인 페이지에서 한 번에 토큰 부여까지 이루어져야 실행되는 메소드
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
         // Role generate
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 
