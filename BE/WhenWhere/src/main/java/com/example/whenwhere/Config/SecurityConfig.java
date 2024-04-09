@@ -28,22 +28,22 @@ import java.nio.charset.StandardCharsets;
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig{
-/*    private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;*/
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final Ouath2UserService oAuth2UserService;
 
 
 
     public SecurityConfig(
-       /* TokenProvider tokenProvider,
+        TokenProvider tokenProvider,
         JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-        JwtAccessDeniedHandler jwtAccessDeniedHandler,*/
+        JwtAccessDeniedHandler jwtAccessDeniedHandler,
         Ouath2UserService oAuth2UserService
     ) {
-/*        this.tokenProvider = tokenProvider;
+        this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;*/
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.oAuth2UserService = oAuth2UserService;
     }
 
@@ -62,11 +62,11 @@ public class SecurityConfig{
         http
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf(csrf -> csrf.disable())
-                /*// 기존에 만들었던 클래스로 예외처리
+                // 기존에 만들었던 클래스로 예외처리
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )*/
+                )
                 .oauth2Login(oauth2Configurer -> oauth2Configurer
                         .successHandler(successHandler())
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
@@ -74,6 +74,9 @@ public class SecurityConfig{
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         // 모든 이에게 허용
                         .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/api/oauth/**"),
+                                new AntPathRequestMatcher("/api/test"),
                                 new AntPathRequestMatcher("/oauth/**"),
                                 new AntPathRequestMatcher("/local/oauth2/code/kakao"),
                                 new AntPathRequestMatcher("/api/user/**"),
@@ -95,9 +98,9 @@ public class SecurityConfig{
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
 
-                //.apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider));
         return http.build();
     }
 

@@ -52,7 +52,8 @@ public class UserService {
 
         User user = User.builder()
                 .userId(userDto.getUserId())
-                .password(securityConfig.passwordEncoder().encode(userDto.getPassword()))
+                // 실제 비밀번호는 카카오 측에 있으므로 Security 세팅을 위한 임시 비밀번호만 설정
+                .password(securityConfig.passwordEncoder().encode("1234"))
                 .nickname(userDto.getNickname())
                 .location(userDto.getLocation())
                 .authorities(Collections.singleton(authority))
