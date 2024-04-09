@@ -43,7 +43,7 @@ public class JwtOauthTokenCheck {
             // 1. header 생성
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
-            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getToken());
+            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken());
 
             HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 

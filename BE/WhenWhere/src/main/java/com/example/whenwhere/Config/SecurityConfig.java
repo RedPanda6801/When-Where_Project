@@ -15,7 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import com.example.whenwhere.Service.Ouath2UserService;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -31,7 +31,7 @@ public class SecurityConfig{
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final OAuth2UserService oAuth2UserService;
+    private final Ouath2UserService oAuth2UserService;
 
 
 
@@ -39,7 +39,7 @@ public class SecurityConfig{
         TokenProvider tokenProvider,
         JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
         JwtAccessDeniedHandler jwtAccessDeniedHandler,
-        OAuth2UserService oAuth2UserService
+        Ouath2UserService oAuth2UserService
     ) {
         this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
@@ -68,13 +68,15 @@ public class SecurityConfig{
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
                 .oauth2Login(oauth2Configurer -> oauth2Configurer
-                        .loginPage("/oauth")
                         .successHandler(successHandler())
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                 )
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         // 모든 이에게 허용
                         .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/api/oauth/**"),
+                                new AntPathRequestMatcher("/api/test"),
                                 new AntPathRequestMatcher("/oauth/**"),
                                 new AntPathRequestMatcher("/local/oauth2/code/kakao"),
                                 new AntPathRequestMatcher("/api/user/**"),
