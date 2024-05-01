@@ -4,6 +4,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: root
+
   security:
     oauth2:
       client:
@@ -34,6 +35,11 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  # 쿼리 초기화
+  sql:
+    init:
+      platform: mysql
+      mode: always
 
   logging:
     level:

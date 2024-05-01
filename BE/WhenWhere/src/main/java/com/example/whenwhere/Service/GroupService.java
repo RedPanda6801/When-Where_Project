@@ -31,13 +31,16 @@ public class GroupService {
     @Autowired
     private ApplyRepository applyRepository;
 
-    public List<Object> getMyGroups(String userId){
+    public List<GroupDto> getMyGroups(String userId){
         // 유저 가져오기
-        User user = userRepository.findByUserId(userId).get();
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if(userOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
+        }
 
         try{
             // 유저의 PK로 유저의 그룹을 모두 가져오기
-            List<Object> myGroups = groupMembersRepository.findAllByUserPk(user.getId());
+            List<GroupDto> myGroups = groupMembersRepository.findAllByUserPk(userOptional.get().getId());
             return myGroups;
         }catch(Exception e){
             System.out.println(e);
@@ -70,15 +73,24 @@ public class GroupService {
 
         // DB에 저장하는 로직 호출
         try{
-            // 권한 부여
-            Authority authority = Authority.builder()
-                    .authorityName("ROLE_HOST").build();
-
+            boolean isHost = false;
             //기존 권한에 추가
             Set<Authority> authorities = host.getAuthorities();
-            authorities.add(authority);
+            for(Authority authority : authorities){
+                if(authority.getAuthorityName().equals("ROLE_HOST")){
+                    isHost = true;
+                    break;
+                }
+            }
+            if(!isHost){
+                // 권한 부여
+                Authority authority = Authority.builder()
+                        .authorityName("ROLE_HOST").build();
 
-            host.updateAuthority(authorities);
+                authorities.add(authority);
+
+                host.updateAuthority(authorities);
+            }
 
             Group created = groupRepository.save(group);
 

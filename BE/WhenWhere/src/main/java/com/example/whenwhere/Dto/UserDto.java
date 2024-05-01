@@ -18,8 +18,6 @@ public class UserDto {
 
     private String nickname;
 
-    private String location;
-
     private boolean activated;
 
     public static UserDto toDto(User entity) {
@@ -28,7 +26,6 @@ public class UserDto {
                 .userId(entity.getUserId())
                 .password(entity.getPassword())
                 .nickname(entity.getNickname())
-                .location(entity.getLocation())
                 .activated(entity.isActivated())
                 .build();
     }

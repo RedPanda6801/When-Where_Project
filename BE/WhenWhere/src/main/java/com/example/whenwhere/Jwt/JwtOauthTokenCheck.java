@@ -29,7 +29,6 @@ public class JwtOauthTokenCheck {
                 Object.class
         );
 
-        //System.out.println(response.getBody());
         if(response.getStatusCode().value() == 200){
             return true;
         }else{
@@ -37,13 +36,13 @@ public class JwtOauthTokenCheck {
         }
     }
 
-    public String getEmail(TokenDto tokenDto) throws ParseException {
+    public String getEmail(String accessToken) throws ParseException {
         try{
             // 토큰 정보로 유저 확인하기
             // 1. header 생성
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
-            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken());
+            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
             HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 

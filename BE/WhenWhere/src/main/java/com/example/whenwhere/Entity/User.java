@@ -31,9 +31,6 @@ public class User {
     @Column(name="nickname", length=50)
     private String nickname;
 
-    @Column(name="location", length = 100)
-    private String location;
-
     @JsonIgnore
     @Column(name="activated")
     private boolean activated;
@@ -68,16 +65,14 @@ public class User {
         return User.builder()
                 .userId(dto.getUserId())
                 .nickname(dto.getNickname())
-                .location(dto.getLocation())
                 .password(dto.getPassword())
                 .activated(true)
                 .build();
     }
 
-    public void update(String password, String nickname, String location){
+    public void update(String password, String nickname){
         this.setPassword(password);
         this.setNickname(nickname);
-        this.setLocation(location);
     }
 
     public void updateAuthority(Set<Authority> authorities){

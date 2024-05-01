@@ -3,6 +3,8 @@ package com.example.whenwhere.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "group_members")
@@ -29,6 +31,7 @@ public class GroupMembers {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Group group;
 
     public GroupMembers toEntity(Apply apply){
