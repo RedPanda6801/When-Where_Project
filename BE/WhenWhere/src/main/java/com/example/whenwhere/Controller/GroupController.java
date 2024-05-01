@@ -4,6 +4,7 @@ import com.example.whenwhere.Dto.ApplyDto;
 import com.example.whenwhere.Dto.GroupDto;
 import com.example.whenwhere.Dto.ObjectDto;
 import com.example.whenwhere.Dto.ResponseDto;
+import com.example.whenwhere.Entity.Group;
 import com.example.whenwhere.Service.GroupService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class GroupController {
     public ResponseEntity<ObjectDto> getMyGroups(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            List<Object> groups = groupService.getMyGroups(authentication.getName());
+            List<GroupDto> groups = groupService.getMyGroups(authentication.getName());
             return new ResponseEntity<>(new ObjectDto(groups, null), HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
@@ -41,15 +42,16 @@ public class GroupController {
 
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<String> createGroup( @RequestBody GroupDto groupDto){
+    public ResponseEntity<ObjectDto> createGroup( @RequestBody GroupDto groupDto){
         // 세션을 유지하고 있는 유저의 아이디를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
             // 유저를 호스트로 하는 그룹 생성 서비스 호출
             groupService.create(groupDto, authentication.getName());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(new ObjectDto(null, "created"), HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            System.out.println(e);
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
     }
 

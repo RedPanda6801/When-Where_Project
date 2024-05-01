@@ -37,32 +37,14 @@ public class UserController {
     // 회원가입 로직
     @PostMapping("/sign-up")
     @ResponseBody
-    public ResponseEntity<String> signup(@RequestBody UserDto userDto){
+    public ResponseEntity<ObjectDto> signup(@RequestBody UserDto userDto){
         try{
-            userService.signup(userDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            TokenDto tokenDto = userService.signup(userDto);
+            // 회원 등록 후에 토큰 발행
+            return new ResponseEntity<>(new ObjectDto(tokenDto, null), HttpStatus.CREATED);
         }catch(Exception e) {
-            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
-    }
-
-    // 로그인 로직
-    @PostMapping("/auth")
-    @ResponseBody
-    public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto){
-        // 아이디, 비밀번호에 대한 인증 토큰 생성
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.createToken(authentication);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
     // 유저 개인정보 조회
@@ -104,5 +86,24 @@ public class UserController {
         }catch(Exception e){
             return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
         }
+    }
+
+    // 로그인 로직 (미사용 API)
+    @PostMapping("/auth")
+    @ResponseBody
+    public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto){
+        // 아이디, 비밀번호에 대한 인증 토큰 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 }
