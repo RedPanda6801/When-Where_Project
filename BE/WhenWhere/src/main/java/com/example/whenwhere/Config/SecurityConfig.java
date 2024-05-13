@@ -78,7 +78,7 @@ public class SecurityConfig{
                                 new AntPathRequestMatcher("/api/oauth/**"),
                                 new AntPathRequestMatcher("/api/test"),
                                 new AntPathRequestMatcher("/oauth/**"),
-                                new AntPathRequestMatcher("/local/oauth2/code/kakao"),
+                                new AntPathRequestMatcher("/local/oauth2/code/**"),
                                 new AntPathRequestMatcher("/api/user/**"),
                                 new AntPathRequestMatcher("/api/group/**")
                             ).permitAll()

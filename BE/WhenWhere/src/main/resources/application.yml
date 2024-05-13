@@ -25,13 +25,13 @@ spring:
               - profile_nickname
               - profile_image
               - account_email
-
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
+    defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
       ddl-auto: update

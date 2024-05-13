@@ -40,15 +40,17 @@ public class ScheduleController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity<String> addSchedule(@RequestBody ScheduleDto scheduleDto){
+    public ResponseEntity<ObjectDto> addSchedule(@RequestBody ScheduleDto scheduleDto){
         try{
             // 세션을 유지하고 있는 유저의 아이디를 가져옴
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println(scheduleDto);
             // 스케줄 추가 로직 구현
             scheduleService.add(scheduleDto, authentication.getName());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(new ObjectDto(null, "created"), HttpStatus.CREATED);
         }catch(Exception e){
-            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            System.out.println(e);
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
 
     }

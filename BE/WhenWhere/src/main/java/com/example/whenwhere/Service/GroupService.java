@@ -1,6 +1,8 @@
 package com.example.whenwhere.Service;
 
+import com.example.whenwhere.Dto.ApplyDto;
 import com.example.whenwhere.Dto.GroupDto;
+import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Entity.*;
 import com.example.whenwhere.Repository.ApplyRepository;
 import com.example.whenwhere.Repository.GroupMembersRepository;
@@ -12,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class GroupService {
@@ -106,18 +105,18 @@ public class GroupService {
         }
     }
 
-    public List<Object> getMembers(Integer groupId){
+    public List<UserDto> getMembers(Integer groupId){
         // Validation
         if(groupId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
         }
         try{
             // 비지니스 로직(group의 member 가져오기)
-            List<Object> members = userRepository.findMembersByGroup(groupId);
-
+            List<UserDto> members = userRepository.findMembersByGroup(groupId);
             return members;
 
         }catch(Exception e){
+            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
@@ -171,7 +170,7 @@ public class GroupService {
         // 유저와 그룹 가져오기
         User user = userRepository.findByUserId(userId).get();
         Optional<Group> groupOptional = groupRepository.findById(groupDto.getId());
-        if(!groupOptional.isPresent()){
+        if(groupOptional.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
         }
         Group group = groupOptional.get();
@@ -206,6 +205,71 @@ public class GroupService {
             group.setHost(null);
             group.setApplies(null);
             groupRepository.delete(group);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
+    @Transactional
+    public void emit(ApplyDto emitDto, String userId){
+        // VALIDATION
+        if(emitDto == null || emitDto.getApplyGroupId() == null || emitDto.getId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+
+        // 방출할 사람과 그에 맞는 그룹 가져오기
+        Optional<User> userOptional = userRepository.findById(emitDto.getId());
+        Optional<Group> groupOptional = groupRepository.findById(emitDto.getApplyGroupId());
+        if(userOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
+        }
+        if(groupOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
+        }
+        User user = userOptional.get();
+        Group group = groupOptional.get();
+
+        // 호스트 가져와서 그룹장인지 확인하기
+        User host = userRepository.findByUserId(userId).get();
+        if(!group.getHost().getId().equals(host.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FORBIDDEN_ERROR");
+        }
+        // 호스트는 내보내기 불가
+        if(host.getId().equals(user.getId())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "HOST_CANNOT_EMIT");
+        }
+
+        try{
+            groupMembersRepository.deleteMember(group.getId(), user.getId());
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
+        }
+    }
+
+    @Transactional
+    public void exit(Integer groupId, String userId){
+        // VALIDATION
+        if(groupId == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
+        }
+        // Group 찾기 및 유저 찾기
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        Optional<Group> groupOptional = groupRepository.findById(groupId);
+        if(userOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
+        }
+        if(groupOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GROUP_NOT_EXISTED");
+        }
+        User user = userOptional.get();
+        Group group = groupOptional.get();
+
+        if(Objects.equals(user.getId(), group.getHost().getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "HOST_CANNOT_EXIT");
+        }
+
+        try{
+            groupMembersRepository.deleteMember(group.getId(), user.getId());
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
