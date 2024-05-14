@@ -5,7 +5,6 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @Builder
 public class UserDto {
@@ -20,6 +19,13 @@ public class UserDto {
 
     private boolean activated;
 
+    public UserDto(){}
+
+    public UserDto(Integer id, String userId, String nickname){
+        this.id = id;
+        this.userId = userId;
+        this.nickname = nickname;
+    }
     public static UserDto toDto(User entity) {
         return UserDto.builder()
                 .id(entity.getId())

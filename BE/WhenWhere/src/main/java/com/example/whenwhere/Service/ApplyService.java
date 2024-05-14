@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ApplyService {
@@ -58,7 +55,8 @@ public class ApplyService {
         }
 
         // 호스트면 이용 불가
-        if(SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST")){
+        if(SecurityUtil.checkRole(SecurityContextHolder.getContext().getAuthentication(), "ROLE_HOST") &&
+                Objects.equals(group.getHost().getId(), applier.getId())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "HOST_NOT_AVAILABLE");
         }
         try{
@@ -77,7 +75,7 @@ public class ApplyService {
         }
     }
 
-    public List<Object> getAllApplyByGroup(Integer groupId, String hostId){
+    public List<ApplyDto> getAllApplyByGroup(Integer groupId, String hostId){
         // Validation
         if(hostId == null || groupId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR");
@@ -98,7 +96,7 @@ public class ApplyService {
         }
         try{
             // 비지니스 로직 호출 (group에 맞는 Applier 조인)
-            List<Object> applies = userRepository.findAllUserByGroupId(group.getId());
+            List<ApplyDto> applies = userRepository.findAllUserByGroupId(group.getId());
             return applies;
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");

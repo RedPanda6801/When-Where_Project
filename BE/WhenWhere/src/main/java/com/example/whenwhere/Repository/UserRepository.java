@@ -1,5 +1,7 @@
 package com.example.whenwhere.Repository;
 
+import com.example.whenwhere.Dto.ApplyDto;
+import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -18,9 +20,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUserId(String userId);
 
-    @Query("SELECT a.id, u.id, u.userId, u.nickname FROM User u LEFT JOIN u.applies a WHERE a.group.id = :gid AND a.state = false")
-    List<Object> findAllUserByGroupId(@Param("gid") Integer gid);
+    @Query("SELECT new com.example.whenwhere.Dto.ApplyDto(a.id, a.group.id, u.userId, u.nickname, a.state, a.accepted) FROM User u LEFT JOIN u.applies a WHERE a.group.id = :gid AND a.state = false")
+    List<ApplyDto> findAllUserByGroupId(@Param("gid") Integer gid);
 
-    @Query("SELECT u.id, u.userId, u.nickname FROM User u LEFT JOIN u.groupMembers g WHERE g.group.id = :groupId")
-    List<Object> findMembersByGroup(@Param("groupId")Integer groupId);
+    @Query("SELECT new com.example.whenwhere.Dto.UserDto(u.id, u.userId, u.nickname) FROM User u LEFT JOIN u.groupMembers g WHERE g.group.id = :groupId")
+    List<UserDto> findMembersByGroup(@Param("groupId")Integer groupId);
 }

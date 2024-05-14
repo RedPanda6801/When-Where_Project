@@ -1,9 +1,6 @@
 package com.example.whenwhere.Controller;
 
-import com.example.whenwhere.Dto.ApplyDto;
-import com.example.whenwhere.Dto.GroupDto;
-import com.example.whenwhere.Dto.ObjectDto;
-import com.example.whenwhere.Dto.ResponseDto;
+import com.example.whenwhere.Dto.*;
 import com.example.whenwhere.Entity.Group;
 import com.example.whenwhere.Service.GroupService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
@@ -61,7 +58,7 @@ public class GroupController {
     public ResponseEntity<ObjectDto> getmembersInGroup(@PathVariable Integer group_id){
         try{
             // member들을 가져오는 서비스 호출
-            List<Object> members = groupService.getMembers(group_id);
+            List<UserDto> members = groupService.getMembers(group_id);
             return new ResponseEntity<>(new ObjectDto(members, null), HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
@@ -70,27 +67,54 @@ public class GroupController {
 
     @PostMapping("/modify")
     @ResponseBody
-    public ResponseEntity<String> modifyGroup(@RequestBody GroupDto groupDto){
+    public ResponseEntity<ObjectDto> modifyGroup(@RequestBody GroupDto groupDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 그룹 서비스에서 수정 로직 호출
         try{
             groupService.modify(groupDto, authentication.getName());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ObjectDto("Modify Success!", null), HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
     }
 
     @PostMapping("/delete")
     @ResponseBody
-    public ResponseEntity<String> deleteGroup(@RequestBody GroupDto groupDto){
+    public ResponseEntity<ObjectDto> deleteGroup(@RequestBody GroupDto groupDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 그룹 서비스에서 삭제 로직 호출
         try{
             groupService.delete(groupDto, authentication.getName());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ObjectDto(null, null), HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<>(customExceptionHandler.getMessage(e), customExceptionHandler.getStatus(e));
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
+
+    // 그룹에서 내보내기
+    @PostMapping("/emit")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> emitToGroup(@RequestBody ApplyDto emitDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 그룹에서 해당 그룹원 방출 로직 호출
+        try{
+            groupService.emit(emitDto, authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(null, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
+        }
+    }
+
+    @PostMapping("/exit")
+    @ResponseBody
+    public ResponseEntity<ObjectDto> exitToGroup(@PathVariable Integer groupId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 그룹에서 해당 그룹원 방출 로직 호출
+        try{
+            groupService.exit(groupId, authentication.getName());
+            return new ResponseEntity<>(new ObjectDto(null, null), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ObjectDto(null, customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
     }
 }

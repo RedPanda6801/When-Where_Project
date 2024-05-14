@@ -14,6 +14,9 @@ public class ApplyDto {
     // group의 pk값
     private Integer applyGroupId;
 
+    private String applierId;
+
+    private String applierNickname;
     // 처리 상태
     private Boolean state;
 
