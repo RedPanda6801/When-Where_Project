@@ -79,9 +79,13 @@ public class OauthController {
 
                 jwt = tokenProvider.createToken(authentication);
             }
-            // 회원이 아니면 jwt를 null로 하고 넘긴다.
+            else{
+                // 회원이 아니면 jwt를 null로 하고 넘긴다.
+                return new ResponseEntity<>(new ObjectDto(new OauthDto(jwt, email), null), HttpStatus.OK);
+            }
             return new ResponseEntity<>(new ObjectDto(new OauthDto(jwt, userOptional.get().getNickname()), null), HttpStatus.OK);
         }catch(Exception e){
+            System.out.println("로그인 에러 : " + e);
             return new ResponseEntity<>(new ObjectDto(null,  customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
     }
