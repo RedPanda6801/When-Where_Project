@@ -13,27 +13,33 @@ import org.springframework.web.client.RestTemplate;
 // 토큰 유효성 검사 (카카오 토큰 만료 여부 판단)
 public class JwtOauthTokenCheck {
     public boolean oauthTokenChecker(String token){
-        // 1. header 생성
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        try{
+            // 1. header 생성
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
+            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+            HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 
-        // 4. http 요청하기
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Object> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v1/user/access_token_info",
-                HttpMethod.GET,
-                httpEntity,
-                Object.class
-        );
+            // 4. http 요청하기
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Object> response = restTemplate.exchange(
+                    "https://kapi.kakao.com/v1/user/access_token_info",
+                    HttpMethod.GET,
+                    httpEntity,
+                    Object.class
+            );
 
-        if(response.getStatusCode().value() == 200){
-            return true;
-        }else{
-            return false;
+            if(response.getStatusCode().value() == 200){
+                return true;
+            }else{
+                System.out.println("에러코드: " + response.getStatusCode().value());
+                return false;
+            }
+        }catch (Exception e){
+            System.out.println("JWT TOKEN 확인 : " + e);
         }
+        return false;
     }
 
     public String getEmail(String accessToken) throws ParseException {
