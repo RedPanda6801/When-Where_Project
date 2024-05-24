@@ -145,7 +145,8 @@ public class ApplyService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "APPLY_ALREADY_PROCESSED");
         }
         try{
-            // 처리 여부에 True
+            // 해당 코드는 기능 부족으로 아래 코드로 대체
+           /* // 처리 여부에 True
             apply.setState(true);
 
             // 반려될 경우
@@ -159,12 +160,29 @@ public class ApplyService {
                 membersObj = membersObj.toEntity(apply);
                 applyRepository.save(apply);
                 groupMembersRepository.save(membersObj);
+            }*/
+            // 반려될 경우
+            if(!applyDto.getDecide()){
+                // 바로 삭제
+                apply.setApplier(null);
+                apply.setGroup(null);
+                applyRepository.delete(apply);
+            }else{ // 승인될 경우
+                // 그룹 멤버 추가 후 apply 삭제
+                GroupMembers membersObj = new GroupMembers();
+                membersObj = membersObj.toEntity(apply);
+                groupMembersRepository.save(membersObj);
+
+                apply.setApplier(null);
+                apply.setGroup(null);
+                applyRepository.delete(apply);
             }
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
 
+    // 기능 구현 부족으로 미사용
     public void delete(ApplyDto applyDto, String userId){
         // VALIDATION
         if(applyDto == null || applyDto.getId() == null){
