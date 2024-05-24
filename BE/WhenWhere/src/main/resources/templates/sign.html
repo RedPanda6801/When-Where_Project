@@ -34,14 +34,15 @@
             .then(function (response) {
                 console.log(response);
                 alert("회원가입 완료")
-                const groupId = localStorage.getItem("groupId")
+                const groupId = localStorage.getItem("group")
                 window.location.href = "http://3.36.131.153:8080/oauth?groupId=${groupId}";
 
             })
             .catch(function (error) {
                 console.error(error);
+                alert("실패")
                 // Handle errors here, if needed
-                window.location.href = "error.html";
+                window.location.href = "http://3.36.131.153:8080/oauth?groupId=${groupId}";
             });
     });
 

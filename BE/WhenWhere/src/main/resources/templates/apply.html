@@ -38,6 +38,7 @@
                         window.location.href = "http://3.36.131.153:8080/oauth?groupId=${applyGroupId}";
                     })
                     .catch(function (error) {
+                        alert("실패");
                         console.error(error);
                     });
             } else if (response === 'NO') {

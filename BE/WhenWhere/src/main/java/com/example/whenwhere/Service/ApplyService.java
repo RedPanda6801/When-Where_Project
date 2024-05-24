@@ -131,7 +131,7 @@ public class ApplyService {
         // 호스트 가져오기
         Optional<User> userOptional = userRepository.findByUserId(hostId);
         if(!userOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER NOT EXISTED");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "USER_NOT_EXISTED");
         }
 
         Apply apply = applyOptional.get();
