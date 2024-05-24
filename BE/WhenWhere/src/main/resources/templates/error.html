@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/oauth.css">
-    <h2>로그인을 해주세요!</h2>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ERROR PAGE</title>
     <style>
         /* 전체 스타일 */
     body {
@@ -40,17 +41,7 @@ h2 {
     </style>
 </head>
 <body>
-    <div class="login-btn">
-        <a href="/oauth2/authorization/kakao">
-            로그인
-        </a>
-    </div>
+    <h1>  SERVICE ERROR  </h1>
+    <h3> 부여받은 URL로 돌아가주세요! </h3>
 </body>
-<script>
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const groupId = urlParams.get('groupId');
-
-    localStorage.setItem("group", groupId);
-</script>
 </html>

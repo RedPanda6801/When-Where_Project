@@ -3,16 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>When&Where 초대 페이지</title>
+    <link rel="stylesheet" href="/css/apply.css">
 </head>
 <body>
+<form id="invitationForm">
     <h1>WHEN & WHERE</h1>
     <div>
         <div>그룹 A</div>
-        <div>에 참가를 희망합니다.</div>
+        <div>참가를 희망합니다.</div>
     </div>
     <div>
-        <button>YES</button>
-        <button>NO</button>
+        <button type="button" onclick="sendResponse('YES')">YES</button>
+        <button type="button" onclick="sendResponse('NO')">NO</button>
     </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    function sendResponse(response) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const token = urlParams.get('token');
+
+        const applyGroupId = localStorage.getItem("group");
+        if (token) {
+            if (response === 'YES') {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+                axios.post('http://3.36.131.153:8080/api/apply/add-apply',
+                    {
+                        applyGroupId: applyGroupId
+                     })
+                    .then(function (response) {
+                        alert("그룹 지원이 완료되었습니다.");
+                        window.location.href = "http://3.36.131.153:8080/oauth?groupId=${applyGroupId}";
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            } else if (response === 'NO') {
+                window.location.href = 'http://3.36.131.153:8080/oauth';
+            }
+        } else {
+            console.error('TOKEN이 없습니다.');
+        }
+    }
+</script>
 </body>
 </html>

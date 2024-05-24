@@ -74,7 +74,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         // 모든 이에게 허용
                         .requestMatchers(
-                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/api/error/**"),
                                 new AntPathRequestMatcher("/api/oauth/**"),
                                 new AntPathRequestMatcher("/api/test"),
                                 new AntPathRequestMatcher("/oauth/**"),

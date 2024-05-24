@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SIGN PAGE</title>
+    <link rel="stylesheet" href="/css/sign.css">
+</head>
+<body>
+<h2>닉네임을 입력해주세요</h2>
+<input id="nickname" type="text" name="Nickname"></input>
+<form id="signup-form">
+    <button type="submit">회원가입하기</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the nickname from the input field
+        var nickname = document.getElementById('nickname').value;
+
+        // Extract email from the current URL
+        var email = getEmailFromURL();
+
+        // Create the data object
+        var data = {
+            userId: email,
+            nickname: nickname
+        };
+
+        // Send the POST request using axios
+        axios.post('http://3.36.131.153:8080/api/user/sign-up', data)
+            .then(function (response) {
+                console.log(response);
+                alert("회원가입 완료")
+                const groupId = localStorage.getItem("groupId")
+                window.location.href = "http://3.36.131.153:8080/oauth?groupId=${groupId}";
+
+            })
+            .catch(function (error) {
+                console.error(error);
+                // Handle errors here, if needed
+                window.location.href = "error.html";
+            });
+    });
+
+    function getEmailFromURL() {
+        var url = window.location.href;
+        var email = ""; // Initialize email
+
+        // Extract email from URL
+        var emailMatch = url.match(/[?&]email=([^&]+)/);
+        if (emailMatch) {
+            email = emailMatch[1];
+        }
+
+        return email;
+    }
+</script>
+</body>
+</html>

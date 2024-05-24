@@ -3,6 +3,7 @@ package com.example.whenwhere.Controller;
 import com.example.whenwhere.Dto.BusytimeDto;
 import com.example.whenwhere.Dto.ObjectDto;
 import com.example.whenwhere.Dto.ScheduleDto;
+import com.example.whenwhere.Dto.UserDto;
 import com.example.whenwhere.Entity.Schedule;
 import com.example.whenwhere.Service.ScheduleService;
 import com.example.whenwhere.Util.CustomExceptionHandler;
@@ -27,26 +28,27 @@ public class ScheduleController {
 
     @GetMapping("/get-schedule")
     @ResponseBody
-    public ResponseEntity<ObjectDto> getSchedule(){
+    public ResponseEntity<ObjectDto> getSchedule(@RequestParam("userId") String userId){
         // 세션을 유지하고 있는 유저의 아이디를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            List<ScheduleDto> schedules = scheduleService.getMySchedules(authentication.getName());
+            List<ScheduleDto> schedules = scheduleService.getMySchedules(userId);
             return new ResponseEntity<>(new ObjectDto(schedules, null), HttpStatus.OK);
         }catch(Exception e){
+            System.out.println(e);
             return new ResponseEntity<>(new ObjectDto(null,  customExceptionHandler.getMessage(e)), customExceptionHandler.getStatus(e));
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add/{email}")
     @ResponseBody
-    public ResponseEntity<ObjectDto> addSchedule(@RequestBody ScheduleDto scheduleDto){
+    public ResponseEntity<ObjectDto> addSchedule(@RequestBody ScheduleDto scheduleDto, @PathVariable String email){
         try{
             // 세션을 유지하고 있는 유저의 아이디를 가져옴
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             System.out.println(scheduleDto);
             // 스케줄 추가 로직 구현
-            scheduleService.add(scheduleDto, authentication.getName());
+            scheduleService.add(scheduleDto, email);
             return new ResponseEntity<>(new ObjectDto(null, "created"), HttpStatus.CREATED);
         }catch(Exception e){
             System.out.println(e);

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db-server:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: whenwheredb
+
+  backend-server:
+    image: whenwhere-docker-app
+    ports:
+      - "8080:8080"

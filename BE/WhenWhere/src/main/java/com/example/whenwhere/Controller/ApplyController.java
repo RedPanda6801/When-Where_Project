@@ -25,6 +25,11 @@ public class ApplyController {
     @Autowired
     private CustomExceptionHandler customExceptionHandler;
 
+    @GetMapping("/page")
+    public String applyPage(@RequestParam("token") String token){
+        return "apply";
+    }
+
     //  지원 전에 로그인 상태여야 한다.
     @PostMapping("/add-apply")
     @ResponseBody

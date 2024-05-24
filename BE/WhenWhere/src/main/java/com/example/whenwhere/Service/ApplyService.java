@@ -71,6 +71,7 @@ public class ApplyService {
             // 비지니스 로직 호출
             applyRepository.save(apply);
         }catch(Exception e){
+            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
         }
     }
