@@ -12,6 +12,8 @@
 > - Cloud : AWS EC2 ubuntu 20.04 LTS
 > - 배포관리 : Docker ver 26.1.1
 
+>> [WhenWhere 프론트엔드 깃허브](https://github.com/RedPanda6801/WhenWhere-Project-Frontend)
+
 ### 프로젝트 구조
 
 ![프로젝트구조도_page-0001](https://github.com/user-attachments/assets/cc770dd0-5079-4358-98a5-c10740b65a4c)
