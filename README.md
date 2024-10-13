@@ -600,7 +600,7 @@ Response
 
 #### 스케줄 관리 알고리즘
 
-<img width="625" alt="알고리즘" src="https://github.com/user-attachments/assets/94c295e9-2cf8-42c1-a872-fb287f44da84">
+<img width="496" alt="스크린샷 2024-10-11 오전 10 32 19" src="https://github.com/user-attachments/assets/3b1952ed-6e22-4856-8859-a87996a4c4fe">
 
 1. 입력받은 기간과 그룹원들의 스케줄 조회
 2. 일 단위로 데이터 정렬
