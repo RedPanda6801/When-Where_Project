@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Grouphome"
+    android:gravity="bottom"
+    app:umanoDragView="@id/slidingPanel"
+    app:umanoOverlay="true"
+    app:umanoPanelHeight="0dp"
+    app:umanoAnchorPoint="0.5"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/back_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/arrowleft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrowleft"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.021"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/schedule_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="홍길동의 일정"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="0dp"
+            android:layout_height="427dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/schedule_title"
+            app:mcv_selectionColor="#F37D3B"
+            app:mcv_showOtherDates="all" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_schedule"
+            android:layout_width="341dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="24dp"
+            android:text="일정 추가하기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/schedule_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="154dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_schedule"
+            app:layout_constraintVertical_bias="0.0">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/slidingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EEEEEE"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cancle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="취소"
+                    android:textColor="#F27D3B"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/newschedule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="새로운 일정"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:id="@+id/add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="추가"
+                    android:textColor="#F27D3B"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/scheduletitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableEnd="@drawable/close"
+                android:ems="10"
+                android:hint="제목"
+                android:inputType="text"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/scheduledetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableEnd="@drawable/close"
+                android:ems="10"
+                android:hint="세부사항"
+                android:inputType="text"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/startdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시작"
+                    android:textSize="20sp" />
+
+                <NumberPicker
+                    android:id="@+id/yearPicker_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="10dp" />
+
+                <NumberPicker
+                    android:id="@+id/monthPicker_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/daypicker_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/hourPicker_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/minPicker_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/enddate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="종료"
+                    android:textSize="20sp" />
+
+                <NumberPicker
+                    android:id="@+id/yearPicker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="10dp" />
+
+                <NumberPicker
+                    android:id="@+id/monthPicker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/daypicker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/hourPicker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+                <NumberPicker
+                    android:id="@+id/minPicker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

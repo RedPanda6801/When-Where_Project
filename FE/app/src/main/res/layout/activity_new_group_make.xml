@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".NewGroupMake">
+
+
+
 
     <ImageView
         android:id="@+id/arrowleft"
@@ -16,53 +20,167 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/login1"
+        android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="26dp"
+        android:text="어떤 유형의 모임인가요?"
         android:fontFamily="@font/pretendard_medium"
-        android:text="새 그룹 만들기"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_columnSpan="2"
+        android:layout_rowSpan="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/arrowleft"
+        />
 
-    <EditText
+    <LinearLayout
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:layout_marginLeft="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/question"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioGroup
+            android:id="@+id/rg_line1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="11dp"
+                android:paddingHorizontal="11dp"
+                android:text="편한 모임"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+
+                />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="11dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginLeft="15dp"
+                android:text="공적인 미팅"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_line2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginTop="11dp"
+                android:text="데이트"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginLeft="15dp"
+                android:text="분위기 좋은 곳"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/groupname"
-        android:layout_width="216dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="216dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="그룹 이름을 입력해주세요."
         android:fontFamily="@font/pretendard_medium"
-        android:hint="그룹 이름"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="24sp"
+        android:layout_marginTop="66dp"
+        android:layout_marginStart="48dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/radioGroup"
 
+        />
 
     <EditText
-        android:id="@+id/groupimage"
-        android:layout_width="216dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:drawableEnd="@drawable/addphoto"
-        android:drawablePadding="6dp"
+        android:id="@+id/nameinput"
+        android:layout_width="250dp"
+        android:layout_height="44dp"
+        android:hint="그룹 이름"
+        android:layout_marginTop="13dp"
+        android:layout_marginStart="48dp"
         android:fontFamily="@font/pretendard_medium"
-        android:hint="그룹 사진 추가"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        android:textSize="16sp"
+        android:textColor="#ACACAC"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupname" />
+        app:layout_constraintTop_toBottomOf="@id/groupname"
+        />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/add"
-        android:layout_width="216dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rectangle_2"
-        android:text="그룹 인원 추가"
-        app:layout_constraintEnd_toEndOf="parent"
+    <Button
+        android:id="@+id/addMember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orangebtn"
+        android:layout_marginBottom="72dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:layout_marginHorizontal="32dp"
+        android:lineHeight="24sp"
+        android:text="그룹 만들기"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupimage" />
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

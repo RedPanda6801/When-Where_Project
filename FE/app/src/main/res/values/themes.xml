@@ -2,10 +2,12 @@
     <!-- Base application theme. -->
 
 
-    <style name="Base.Theme.WhenandWhere" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.WhenandWhere" parent="Theme.AppCompat.Light">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="windowNoTitle">true</item>
     </style>
+
 
     <style name="Theme.WhenandWhere" parent="Base.Theme.WhenandWhere" />
 </resources>

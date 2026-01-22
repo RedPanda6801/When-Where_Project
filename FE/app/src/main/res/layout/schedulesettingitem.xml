@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/schedule_text"
+    android:layout_width="342dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:background="@drawable/button_border"
+    android:textColor="@android:color/black"
+    android:padding="16dp"
+    android:textSize="16sp"
+    android:textAlignment="center"/>

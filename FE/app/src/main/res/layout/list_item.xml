@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rectangle_2"
+    android:id="@+id/rectangle6"
     android:layout_width="match_parent"
-    android:layout_height="156dp"
+    android:layout_height="40dp"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
     android:elevation="8dp"
-    android:layout_margin="16dp"
+    android:layout_marginBottom="8dp"
     card_view:cardCornerRadius="12dp">
 
     <LinearLayout
+        android:background="?attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/groupimage"
-            android:layout_width="wrap_content"
-            android:layout_height="115dp"
-            card_view:srcCompat="@drawable/juyeon"
-            android:scaleType="fitXY"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"> <!-- 수평 방향 설정 -->
 
         <TextView
             android:id="@+id/groupname"
-            android:layout_width="match_parent"
-            android:layout_height="41dp"
-            android:text="8반 찐따 모임"
-            android:gravity="center_vertical"
-            android:layout_marginStart="14dp"
-
-            android:textSize="15sp"
+            android:layout_marginStart="21dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="12sp"
+            android:text="dkdk"
+            android:textColor="@color/black"
             android:fontFamily="@font/pretendard_medium"
-            />
+            android:layout_gravity="center" /> <!-- 중앙 정렬 -->
+
+        <TextView
+            android:id="@+id/grouptheme"
+            android:layout_marginEnd="21dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="10sp"
+            android:text="가나다라"
+            android:textAlignment="textEnd"
+            android:fontFamily="@font/pretendard_medium"
+            android:textColor="#ACACAC"
+            android:gravity="end"
+            android:layout_gravity="center" /> <!-- 중앙 정렬 -->
 
     </LinearLayout>
 
-
 </androidx.cardview.widget.CardView>
-
-

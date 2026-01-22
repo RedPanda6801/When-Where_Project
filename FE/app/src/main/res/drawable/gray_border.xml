@@ -1,0 +1,10 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid
+        android:color="#FFFFFF" /> <!-- 배경색을 흰색으로 설정 -->
+    <stroke
+        android:width="2dp"
+        android:color="#ACACAC" /> <!-- 테두리 색상 및 두께 설정 -->
+    <corners
+        android:radius="10dp" /> <!-- 테두리 모서리의 각도를 조정할 수 있음 -->
+</shape>

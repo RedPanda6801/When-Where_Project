@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/place1"
+        android:layout_width="279dp"
+        android:layout_height="97dp"
+        android:background="@drawable/courseview"
+        android:gravity="center_horizontal"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/restaurantname"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:lineHeight="19sp"
+                android:text="장소1"
+                android:textColor="@color/main"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/restaddress"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="중간 장소로부터 거리"
+                android:textColor="#565656"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/restphone"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="상세 주소"
+                android:textColor="#565656"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/resthash"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/main"
+                android:text="해시태그"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/place2"
+        android:layout_width="279dp"
+        android:layout_height="97dp"
+        android:background="@drawable/courseview"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/place1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cafeplace"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:lineHeight="19sp"
+                android:text="장소1"
+                android:textColor="@color/main"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/cafeaddress"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="중간 장소로부터 거리"
+                android:textColor="#565656"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/cafephone"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="상세 주소"
+                android:textColor="#565656"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/cafehash"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/main"
+                android:text="해시태그"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/place3"
+        android:layout_width="279dp"
+        android:layout_height="97dp"
+        android:background="@drawable/courseview"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/place2">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/drinkname"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:lineHeight="19sp"
+                android:text="장소1"
+                android:textColor="@color/main"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/drinkaddress"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="중간 장소로부터 거리"
+                android:textColor="#565656"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/drinkphone"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="상세 주소"
+                android:textColor="#565656"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/drinkhash"
+                android:layout_width="234dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/main"
+                android:text="해시태그"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
