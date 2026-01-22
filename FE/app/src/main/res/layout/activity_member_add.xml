@@ -37,36 +37,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="22dp"
-        android:background="@drawable/rectangle_3"
+        android:background="@drawable/graystroke"
         android:text="그룹 링크 공유하기"
         android:textSize="16sp"
         android:textColor="#000000"
         android:textAlignment="viewStart"
-        android:enabled="false"
+        android:paddingHorizontal="19dp"
         android:drawableEnd="@drawable/link"
         app:layout_constraintTop_toBottomOf="@+id/memberadd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <Button
-        android:id="@+id/emailinvite"
-        android:layout_width="328dp"
-        android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rectangle_3"
-        android:text="이메일로 직접 초대하기"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:textAlignment="viewStart"
-        android:enabled="false"
-        android:drawableEnd="@drawable/libraryadd"
-        app:layout_constraintTop_toBottomOf="@+id/sharelink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,6 +42,9 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     List<Apply> applies;
 
+    @OneToOne(mappedBy = "group", cascade = CascadeType.REMOVE)
+    GroupResult groupResult;
+
     public Group toEntity(GroupDto dto){
         return Group.builder()
                 .groupName(dto.getGroupName())

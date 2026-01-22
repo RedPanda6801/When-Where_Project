@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ai_result">
+
+    <ImageButton
+        android:id="@+id/arrowleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/arrowleft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="코스 선택"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/arrowleft"
+        app:layout_constraintTop_toTopOf="@+id/arrowleft"
+
+        />
+
+
+    <LinearLayout
+        android:id="@+id/course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <RelativeLayout
+            android:id="@+id/place1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/courseview"
+            android:gravity="center_horizontal"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/restaurantname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:lineHeight="19sp"
+                    android:text="장소1"
+                    android:textColor="@color/main"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/restaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="중간 장소로부터 거리"
+                    android:textColor="#565656"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/restphone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="상세 주소"
+                    android:textColor="#565656"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/resthash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="해시태그"
+                    android:textColor="@color/main"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/place2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/courseview"
+            android:gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/place1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/cafeplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:lineHeight="19sp"
+                    android:text="장소1"
+                    android:textColor="@color/main"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/cafeaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="중간 장소로부터 거리"
+                    android:textColor="#565656"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/cafephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="상세 주소"
+                    android:textColor="#565656"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/cafehash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="해시태그"
+                    android:textColor="@color/main"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/place3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/courseview"
+            android:gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/place2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/drinkname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:lineHeight="19sp"
+                    android:text="장소1"
+                    android:textColor="@color/main"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/drinkaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="중간 장소로부터 거리"
+                    android:textColor="#565656"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/drinkphone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="상세 주소"
+                    android:textColor="#565656"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/drinkhash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="해시태그"
+                    android:textColor="@color/main"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="40dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/select"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="7dp"
+            android:layout_weight="1"
+            android:background="@drawable/orangebtn"
+            android:lineHeight="24sp"
+            android:text="코스 확정하기"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/retry"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border"
+            android:text="다시 추천받기"
+            android:textColor="@color/main"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

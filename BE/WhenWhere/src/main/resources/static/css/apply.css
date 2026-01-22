@@ -1,0 +1,54 @@
+/* 전체 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* 폼 스타일 */
+#invitationForm {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 제목 스타일 */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 버튼 스타일 */
+button {
+    padding: 10px 20px;
+    background-color: #e0a654;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 5px;
+}
+
+button:hover {
+    background-color: #e5c89f;
+}
+
+/* 참가 텍스트 스타일 */
+div {
+    margin-bottom: 20px;
+}
+
+div > div:first-child {
+    font-weight: bold;
+}
+
+div > div:last-child {
+    color: #666;
+}

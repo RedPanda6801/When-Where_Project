@@ -1,0 +1,17 @@
+/* 전체 스타일 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* 제목 스타일 */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}

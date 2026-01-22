@@ -34,6 +34,11 @@ public class UserController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
+    @GetMapping("/sign/page")
+    public String signPage(@RequestParam("email") String email){
+        return "sign";
+    }
+
     // 회원가입 로직
     @PostMapping("/sign-up")
     @ResponseBody

@@ -165,27 +165,28 @@ public class ScheduleService {
 
             // 뽑아온 스케줄을 필터링하는 알고리즘
             for(int i = 0; i < schedules.size(); i++){
-                // 초기값 세팅
+
+                // 다음 날짜일 때 push
                 if(scheduleTmp == null){
                     scheduleTmp = new Schedule();
                     scheduleTmp.setStartTime(schedules.get(i).getStartTime());
                     scheduleTmp.setEndTime(schedules.get(i).getEndTime());
-                    // 마지막 값도 넣어주기
-                    if(i == schedules.size()-1){
-                        result.add(scheduleTmp);
-                    }
+
+                    if(i >= schedules.size()-1) result.add(scheduleTmp);
                     continue;
                 }
                 // 날짜가 바뀌면 결과를 넣고 초기화
                 if(scheduleTmp.getStartTime().getDayOfMonth() != schedules.get(i).getStartTime().getDayOfMonth()){
                     result.add(scheduleTmp.clone());
+
                     // 마지막 값도 넣어주기
                     if(i == schedules.size()-1){
                         scheduleTmp.setStartTime(schedules.get(i).getStartTime());
                         scheduleTmp.setEndTime(schedules.get(i).getEndTime());
                         result.add(scheduleTmp);
                     }
-                    scheduleTmp = null;
+                    scheduleTmp.setStartTime(schedules.get(i).getStartTime());
+                    scheduleTmp.setEndTime(schedules.get(i).getEndTime());
                     continue;
                 }
 

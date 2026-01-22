@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectionOption">
+
+    <ImageView
+        android:id="@+id/arrowleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/arrowleft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:text="어떤 유형의 모임인가요?"
+        android:fontFamily="@font/pretendard_medium"
+        android:textSize="24sp"
+        android:layout_columnSpan="2"
+        android:layout_rowSpan="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/arrowleft"
+        />
+
+    <LinearLayout
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:layout_marginLeft="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/question"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioGroup
+            android:id="@+id/rg_line1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:onClick="group1"
+            >
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="11dp"
+                android:paddingHorizontal="11dp"
+                android:text="편한 모임"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+
+                />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="11dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginLeft="15dp"
+                android:text="공적인 미팅"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_line2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:onClick="group1">
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginTop="11dp"
+                android:text="데이트"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:paddingHorizontal="11dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginLeft="15dp"
+                android:text="분위기 좋은 곳"
+                android:textAlignment="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_sector"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="1"
+                android:checked="false"
+                android:textColor="@drawable/radio_text_color"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="14sp"
+                />
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/question2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:layout_marginLeft="48dp"
+        android:text="&#127867; 음주 예정인가요?"
+        android:fontFamily="@font/pretendard_medium"
+        android:textSize="24sp"
+        android:layout_columnSpan="2"
+        android:layout_rowSpan="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        />
+
+    <RadioGroup
+        android:id="@+id/alcohol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/question2">
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:paddingHorizontal="11dp"
+            android:layout_marginTop="11dp"
+            android:text="예"
+            android:textAlignment="center"
+            android:button="@android:color/transparent"            android:background="@drawable/radio_sector"
+            android:checked="true"
+            android:textColor="@drawable/radio_text_color"
+            android:fontFamily="@font/pretendard_medium"
+            android:textSize="14sp"/>
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:paddingHorizontal="11dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginLeft="13dp"
+            android:text="아니요"
+            android:textAlignment="center"
+            android:button="@android:color/transparent"            android:background="@drawable/radio_sector"
+            android:checked="false"
+            android:textColor="@drawable/radio_text_color"
+            android:fontFamily="@font/pretendard_medium"
+            android:textSize="14sp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/morebtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="68dp"
+        android:background="@drawable/orangebtn"
+        android:fontFamily="@font/pretendard_bold"
+        android:lineHeight="24sp"
+        android:text="다른 코스 더 추천 받기"
+        android:textColor="@color/white"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".KakaoApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,42 +16,92 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhenandWhere"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity
+            android:name=".Accept"
+            android:exported="false" />
+        <activity
+            android:name=".Resign"
+            android:exported="true" />
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao3d164f1ef97c8f24a2f77a9b178ca82f" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".moimResult"
+            android:exported="false" />
+        <activity
+            android:name=".nickname"
+            android:exported="false" />
+        <activity
+            android:name=".Grouphome"
+            android:exported="true" />
+        <activity
+            android:name=".ScheduleTitle"
+            android:exported="true" />
+        <activity
+            android:name=".ScheduleSetting"
+            android:exported="true" />
+        <activity
+            android:name=".EditPlace"
+            android:exported="true" />
+        <activity
+            android:name=".TimeResultActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".middleplace"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="edsl33n0qa" />
+
+        <activity
+            android:name=".ai_result"
+            android:exported="true" />
+        <activity
+            android:name=".SelectionOption"
+            android:exported="true" />
         <activity
             android:name=".login"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".GroupSetting_leader"
-            android:exported="false" />
-        <activity
-            android:name=".GroupSetting_normal"
-            android:exported="false" />
-
+            android:exported="true" />
         <activity
             android:name=".GrouplistActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".memberAdd"
             android:exported="false" />
         <activity
             android:name=".NewGroupMake"
-            android:exported="false" />
-
-        <activity
-            android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".StartActivity"

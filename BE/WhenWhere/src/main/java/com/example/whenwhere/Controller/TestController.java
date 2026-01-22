@@ -14,4 +14,10 @@ public class TestController {
     public ResponseEntity<ObjectDto> Test(){
         return new ResponseEntity<>(new ObjectDto(null, "good Test"), HttpStatus.OK);
     }
+
+    @GetMapping("/error")
+    public String errorPage(){
+        return "error";
+    }
+
 }

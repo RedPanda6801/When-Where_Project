@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:id="@+id/rectangle_2"
+        android:layout_width="361dp"
+        android:layout_height="400dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="400dp"
+        android:background="@drawable/rectangle_2"
+        />
+</selector>
